@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+>
+    <head>
+        <title>Booking Test Project</title>
+    </head>
+
+    <body>
+        <ui:composition template="templates/user_layout.xhtml">
+            <ui:define name="content">
+                <div class="ui fluid raised form segment">
+                    <h:form>
+                      <div class="field">
+                        <h:inputText value="#{ search.destination }" />
+                      </div>
+
+                      <div class="field">
+                        <h:inputText value="#{ search.date }" styleClass="datepicker" />
+                      </div>
+
+                      <h:commandButton styleClass="ui blue submit button" action="#{ search.perform }" value="Find" />
+                  </h:form>
+                </div>
+
+                <div class="ui fluid raised form segment">
+                    <h3>Flights to: #{ search.destination } on #{ search.date }</h3>
+
+                    <h:dataTable value="#{ search.flights }" var="f"
+                        styleClass="flights-table"
+                        headerClass="flights-table-header"
+                        rowClasses="flights-table-odd-row,flights-table-even-row"
+                    >
+                        <h:column>
+                            <f:facet name="header">From</f:facet>
+                            #{ f.departure }
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">To</f:facet>
+                            #{ f.destination }
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">At</f:facet>
+                            #{ f.date }
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Price</f:facet>
+                            #{ f.ticketCost }
+                        </h:column>
+                    </h:dataTable>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
