@@ -3,8 +3,8 @@
 
     $.address = (function () {
 
-        var _trigger = function(name) {
-               var e = $.extend($.Event(name), (function() {
+        var _trigger = function (name) {
+                var e = $.extend($.Event(name), (function () {
                     var parameters = {},
                         parameterNames = $.address.parameterNames();
                     for (var i = 0, l = parameterNames.length; i < l; i++) {
@@ -22,49 +22,49 @@
                 $($.address).trigger(e);
                 return e;
             },
-            _array = function(obj) {
+            _array = function (obj) {
                 return Array.prototype.slice.call(obj);
             },
-            _bind = function(value, data, fn) {
+            _bind = function (value, data, fn) {
                 $().bind.apply($($.address), Array.prototype.slice.call(arguments));
                 return $.address;
             },
-            _unbind = function(value,  fn) {
+            _unbind = function (value, fn) {
                 $().unbind.apply($($.address), Array.prototype.slice.call(arguments));
                 return $.address;
             },
-            _supportsState = function() {
+            _supportsState = function () {
                 return (_h.pushState && _opts.state !== UNDEFINED);
             },
-            _hrefState = function() {
-                return ('/' + _l.pathname.replace(new RegExp(_opts.state), '') + 
+            _hrefState = function () {
+                return ('/' + _l.pathname.replace(new RegExp(_opts.state), '') +
                     _l.search + (_hrefHash() ? '#' + _hrefHash() : '')).replace(_re, '/');
             },
-            _hrefHash = function() {
+            _hrefHash = function () {
                 var index = _l.href.indexOf('#');
                 return index != -1 ? _l.href.substr(index + 1) : '';
             },
-            _href = function() {
+            _href = function () {
                 return _supportsState() ? _hrefState() : _hrefHash();
             },
-            _window = function() {
+            _window = function () {
                 try {
                     return top.document !== UNDEFINED && top.document.title !== UNDEFINED ? top : window;
-                } catch (e) { 
+                } catch (e) {
                     return window;
                 }
             },
-            _js = function() {
+            _js = function () {
                 return 'javascript';
             },
-            _strict = function(value) {
+            _strict = function (value) {
                 value = value.toString();
                 return (_opts.strict && value.substr(0, 1) != '/' ? '/' : '') + value;
             },
-            _cssint = function(el, value) {
+            _cssint = function (el, value) {
                 return parseInt(el.css(value), 10);
             },
-            _listen = function() {
+            _listen = function () {
                 if (!_silent) {
                     var hash = _href(),
                         diff = decodeURI(_value) != decodeURI(hash);
@@ -81,17 +81,17 @@
                     }
                 }
             },
-            _update = function(internal) {
+            _update = function (internal) {
                 _st(_track, 10);
-                return _trigger(CHANGE).isDefaultPrevented() || 
+                return _trigger(CHANGE).isDefaultPrevented() ||
                     _trigger(internal ? INTERNAL_CHANGE : EXTERNAL_CHANGE).isDefaultPrevented();
             },
-            _track = function() {
+            _track = function () {
                 if (_opts.tracker !== 'null' && _opts.tracker !== NULL) {
                     var fn = $.isFunction(_opts.tracker) ? _opts.tracker : _t[_opts.tracker],
-                        value = (_l.pathname + _l.search + 
-                                ($.address && !_supportsState() ? $.address.value() : ''))
-                                .replace(/\/\//, '/').replace(/^\/$/, '');
+                        value = (_l.pathname + _l.search +
+                            ($.address && !_supportsState() ? $.address.value() : ''))
+                            .replace(/\/\//, '/').replace(/^\/$/, '');
                     if ($.isFunction(fn)) {
                         fn(value);
                     } else if ($.isFunction(_t.urchinTracker)) {
@@ -103,10 +103,10 @@
                     }
                 }
             },
-            _html = function() {
-                var src = _js() + ':' + FALSE + ';document.open();document.writeln(\'<html><head><title>' + 
-                    _d.title.replace(/\'/g, '\\\'') + '</title><script>var ' + ID + ' = "' + encodeURIComponent(_href()).replace(/\'/g, '\\\'') + 
-                    (_d.domain != _l.hostname ? '";document.domain="' + _d.domain : '') + 
+            _html = function () {
+                var src = _js() + ':' + FALSE + ';document.open();document.writeln(\'<html><head><title>' +
+                    _d.title.replace(/\'/g, '\\\'') + '</title><script>var ' + ID + ' = "' + encodeURIComponent(_href()).replace(/\'/g, '\\\'') +
+                    (_d.domain != _l.hostname ? '";document.domain="' + _d.domain : '') +
                     '";</' + 'script></head></html>\');document.close();';
                 if (_version < 7) {
                     _frame.src = src;
@@ -114,7 +114,7 @@
                     _frame.contentWindow.location.replace(src);
                 }
             },
-            _options = function() {
+            _options = function () {
                 if (_url && _qi != -1) {
                     var i, param, params = _url.substr(_qi + 1).split('&');
                     for (i = 0; i < params.length; i++) {
@@ -130,7 +130,7 @@
                 }
                 _value = _href();
             },
-            _load = function() {
+            _load = function () {
                 if (!_loaded) {
                     _loaded = TRUE;
                     _options();
@@ -138,13 +138,13 @@
                     if (_opts.wrap) {
                         var body = $('body'),
                             wrap = $('body > *')
-                                .wrapAll('<div style="padding:' + 
-                                    (_cssint(body, 'marginTop') + _cssint(body, 'paddingTop')) + 'px ' + 
-                                    (_cssint(body, 'marginRight') + _cssint(body, 'paddingRight')) + 'px ' + 
-                                    (_cssint(body, 'marginBottom') + _cssint(body, 'paddingBottom')) + 'px ' + 
+                                .wrapAll('<div style="padding:' +
+                                    (_cssint(body, 'marginTop') + _cssint(body, 'paddingTop')) + 'px ' +
+                                    (_cssint(body, 'marginRight') + _cssint(body, 'paddingRight')) + 'px ' +
+                                    (_cssint(body, 'marginBottom') + _cssint(body, 'paddingBottom')) + 'px ' +
                                     (_cssint(body, 'marginLeft') + _cssint(body, 'paddingLeft')) + 'px;" />')
                                 .parent()
-                                .wrap('<div id="' + ID + '" style="height:100%;overflow:auto;position:relative;' + 
+                                .wrap('<div id="' + ID + '" style="height:100%;overflow:auto;position:relative;' +
                                     (_webkit && !window.statusbar.visible ? 'resize:both;' : '') + '" />');
                         $('html, body')
                             .css({
@@ -174,8 +174,8 @@
                             _frame.tabIndex = -1;
                             _d.body.insertAdjacentElement('afterBegin', _frame);
                         }
-                        _st(function() {
-                            $(_frame).bind('load', function() {
+                        _st(function () {
+                            $(_frame).bind('load', function () {
                                 var win = _frame.contentWindow;
                                 _value = win[ID] !== UNDEFINED ? win[ID] : '';
                                 if (_value != _href()) {
@@ -188,7 +188,7 @@
                             }
                         }, 50);
                     }
-                    _st(function() {
+                    _st(function () {
                         _trigger('init');
                         _update(FALSE);
                     }, 1);
@@ -208,33 +208,33 @@
                     }
                 }
             },
-            _popstate = function() {
+            _popstate = function () {
                 if (decodeURI(_value) != decodeURI(_href())) {
                     _value = _href();
                     _update(FALSE);
                 }
             },
-            _unload = function() {
+            _unload = function () {
                 if (_t.removeEventListener) {
                     _t.removeEventListener(HASH_CHANGE, _listen, FALSE);
                 } else if (_t.detachEvent) {
                     _t.detachEvent('on' + HASH_CHANGE, _listen);
                 }
             },
-            _uaMatch = function(ua) {
+            _uaMatch = function (ua) {
                 ua = ua.toLowerCase();
-                var match = /(chrome)[ \/]([\w.]+)/.exec( ua ) ||
-                    /(webkit)[ \/]([\w.]+)/.exec( ua ) ||
-                    /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
-                    /(msie) ([\w.]+)/.exec( ua ) ||
-                    ua.indexOf('compatible') < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
+                var match = /(chrome)[ \/]([\w.]+)/.exec(ua) ||
+                    /(webkit)[ \/]([\w.]+)/.exec(ua) ||
+                    /(opera)(?:.*version|)[ \/]([\w.]+)/.exec(ua) ||
+                    /(msie) ([\w.]+)/.exec(ua) ||
+                    ua.indexOf('compatible') < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec(ua) ||
                     [];
                 return {
                     browser: match[ 1 ] || '',
                     version: match[ 2 ] || '0'
                 };
             },
-            _detectBrowser = function() {
+            _detectBrowser = function () {
                 var browser = {},
                     matched = _uaMatch(navigator.userAgent);
                 if (matched.browser) {
@@ -260,8 +260,8 @@
             TRUE = true,
             FALSE = false,
             _opts = {
-                autoUpdate: TRUE, 
-                history: TRUE, 
+                autoUpdate: TRUE,
+                history: TRUE,
                 strict: TRUE,
                 wrap: FALSE
             },
@@ -271,7 +271,7 @@
             _msie = !$.support.opacity,
             _t = _window(),
             _d = _t.document,
-            _h = _t.history, 
+            _h = _t.history,
             _l = _t.location,
             _si = setInterval,
             _st = setTimeout,
@@ -282,21 +282,21 @@
             _form,
             _url = $('script:last').attr('src'),
             _qi = _url ? _url.indexOf('?') : -1,
-            _title = _d.title, 
+            _title = _d.title,
             _silent = FALSE,
             _loaded = FALSE,
             _juststart = TRUE,
             _updating = FALSE,
-            _listeners = {}, 
+            _listeners = {},
             _value = _href();
-            
+
         if (_msie) {
             _version = parseFloat(_agent.substr(_agent.indexOf('MSIE') + 4));
             if (_d.documentMode && _d.documentMode != _version) {
                 _version = _d.documentMode != 8 ? 7 : 8;
             }
             var pc = _d.onpropertychange;
-            _d.onpropertychange = function() {
+            _d.onpropertychange = function () {
                 if (pc) {
                     pc.call(_d);
                 }
@@ -305,12 +305,12 @@
                 }
             };
         }
-        
+
         if (_h.navigationMode) {
             _h.navigationMode = 'compatible';
         }
         if (document.readyState == 'complete') {
-            var interval = setInterval(function() {
+            var interval = setInterval(function () {
                 if ($.address) {
                     _load();
                     clearInterval(interval);
@@ -323,25 +323,25 @@
         $(window).bind('popstate', _popstate).bind('unload', _unload);
 
         return {
-            bind: function(type, data, fn) {
+            bind: function (type, data, fn) {
                 return _bind.apply(this, _array(arguments));
             },
-            unbind: function(type, fn) {
+            unbind: function (type, fn) {
                 return _unbind.apply(this, _array(arguments));
             },
-            init: function(data, fn) {
+            init: function (data, fn) {
                 return _bind.apply(this, [INIT].concat(_array(arguments)));
             },
-            change: function(data, fn) {
+            change: function (data, fn) {
                 return _bind.apply(this, [CHANGE].concat(_array(arguments)));
             },
-            internalChange: function(data, fn) {
+            internalChange: function (data, fn) {
                 return _bind.apply(this, [INTERNAL_CHANGE].concat(_array(arguments)));
             },
-            externalChange: function(data, fn) {
+            externalChange: function (data, fn) {
                 return _bind.apply(this, [EXTERNAL_CHANGE].concat(_array(arguments)));
             },
-            baseURL: function() {
+            baseURL: function () {
                 var url = _l.href;
                 if (url.indexOf('#') != -1) {
                     url = url.substr(0, url.indexOf('#'));
@@ -351,21 +351,21 @@
                 }
                 return url;
             },
-            autoUpdate: function(value) {
+            autoUpdate: function (value) {
                 if (value !== UNDEFINED) {
                     _opts.autoUpdate = value;
                     return this;
                 }
                 return _opts.autoUpdate;
             },
-            history: function(value) {
+            history: function (value) {
                 if (value !== UNDEFINED) {
                     _opts.history = value;
                     return this;
                 }
                 return _opts.history;
             },
-            state: function(value) {
+            state: function (value) {
                 if (value !== UNDEFINED) {
                     _opts.state = value;
                     var hrefState = _hrefState();
@@ -375,7 +375,7 @@
                                 _l.replace(_opts.state.replace(/^\/$/, '') + hrefState.substr(2));
                             }
                         } else if (hrefState != '/' && hrefState.replace(/^\/#/, '') != _hrefHash()) {
-                            _st(function() {
+                            _st(function () {
                                 _l.replace(_opts.state.replace(/^\/$/, '') + '/#' + hrefState);
                             }, 1);
                         }
@@ -384,36 +384,36 @@
                 }
                 return _opts.state;
             },
-            strict: function(value) {
+            strict: function (value) {
                 if (value !== UNDEFINED) {
                     _opts.strict = value;
                     return this;
                 }
                 return _opts.strict;
             },
-            tracker: function(value) {
+            tracker: function (value) {
                 if (value !== UNDEFINED) {
                     _opts.tracker = value;
                     return this;
                 }
                 return _opts.tracker;
             },
-            wrap: function(value) {
+            wrap: function (value) {
                 if (value !== UNDEFINED) {
                     _opts.wrap = value;
                     return this;
                 }
                 return _opts.wrap;
             },
-            update: function() {
+            update: function () {
                 _updating = TRUE;
                 this.value(_value);
                 _updating = FALSE;
                 return this;
             },
-            title: function(value) {
+            title: function (value) {
                 if (value !== UNDEFINED) {
-                    _st(function() {
+                    _st(function () {
                         _title = _d.title = value;
                         if (_juststart && _frame && _frame.contentWindow && _frame.contentWindow.document) {
                             _frame.contentWindow.document.title = value;
@@ -424,7 +424,7 @@
                 }
                 return _d.title;
             },
-            value: function(value) {
+            value: function (value) {
                 if (value !== UNDEFINED) {
                     value = _strict(value);
                     if (value == '/') {
@@ -439,8 +439,8 @@
                             return this;
                         }
                         if (_supportsState()) {
-                            _h[_opts.history ? 'pushState' : 'replaceState']({}, '', 
-                                    _opts.state.replace(/\/$/, '') + (_value === '' ? '/' : _value));
+                            _h[_opts.history ? 'pushState' : 'replaceState']({}, '',
+                                _opts.state.replace(/\/$/, '') + (_value === '' ? '/' : _value));
                         } else {
                             _silent = TRUE;
                             if (_webkit) {
@@ -460,7 +460,9 @@
                                 _st(_html, 50);
                             }
                             if (_webkit) {
-                                _st(function(){ _silent = FALSE; }, 1);
+                                _st(function () {
+                                    _silent = FALSE;
+                                }, 1);
                             } else {
                                 _silent = FALSE;
                             }
@@ -470,7 +472,7 @@
                 }
                 return _strict(_value);
             },
-            path: function(value) {
+            path: function (value) {
                 if (value !== UNDEFINED) {
                     var qs = this.queryString(),
                         hash = this.hash();
@@ -479,7 +481,7 @@
                 }
                 return _strict(_value).split('#')[0].split('?')[0];
             },
-            pathNames: function() {
+            pathNames: function () {
                 var path = this.path(),
                     names = path.replace(_re, '/').split('/');
                 if (path.substr(0, 1) == '/' || path.length === 0) {
@@ -490,7 +492,7 @@
                 }
                 return names;
             },
-            queryString: function(value) {
+            queryString: function (value) {
                 if (value !== UNDEFINED) {
                     var hash = this.hash();
                     this.value(this.path() + (value ? '?' + value : '') + (hash ? '#' + hash : ''));
@@ -499,7 +501,7 @@
                 var arr = _value.split('?');
                 return arr.slice(1, arr.length).join('?').split('#')[0];
             },
-            parameter: function(name, value, append) {
+            parameter: function (name, value, append) {
                 var i, params;
                 if (value !== UNDEFINED) {
                     var names = this.parameterNames();
@@ -512,7 +514,7 @@
                             v = [v];
                         }
                         if (n == name) {
-                            v = (value === NULL || value === '') ? [] : 
+                            v = (value === NULL || value === '') ? [] :
                                 (append ? v.concat([value]) : [value]);
                         }
                         for (var j = 0; j < v.length; j++) {
@@ -540,7 +542,7 @@
                     }
                 }
             },
-            parameterNames: function() {
+            parameterNames: function () {
                 var qs = this.queryString(),
                     names = [];
                 if (qs && qs.indexOf('=') != -1) {
@@ -554,39 +556,39 @@
                 }
                 return names;
             },
-            hash: function(value) {
+            hash: function (value) {
                 if (value !== UNDEFINED) {
                     this.value(_value.split('#')[0] + (value ? '#' + value : ''));
                     return this;
                 }
                 var arr = _value.split('#');
-                return arr.slice(1, arr.length).join('#');                
+                return arr.slice(1, arr.length).join('#');
             }
         };
     })();
-    
-    $.fn.address = function(fn) {
+
+    $.fn.address = function (fn) {
         if (!this.data('address')) {
-            this.on('click', function(e) {
+            this.on('click',function (e) {
                 if (e.shiftKey || e.ctrlKey || e.metaKey || e.which == 2) {
                     return true;
                 }
                 var target = e.currentTarget;
                 if ($(target).is('a')) {
                     e.preventDefault();
-                    var value = fn ? fn.call(target) : 
-                        /address:/.test($(target).attr('rel')) ? $(target).attr('rel').split('address:')[1].split(' ')[0] : 
-                        $.address.state() !== undefined && !/^\/?$/.test($.address.state()) ? 
-                                $(target).attr('href').replace(new RegExp('^(.*' + $.address.state() + '|\\.)'), '') : 
+                    var value = fn ? fn.call(target) :
+                        /address:/.test($(target).attr('rel')) ? $(target).attr('rel').split('address:')[1].split(' ')[0] :
+                            $.address.state() !== undefined && !/^\/?$/.test($.address.state()) ?
+                                $(target).attr('href').replace(new RegExp('^(.*' + $.address.state() + '|\\.)'), '') :
                                 $(target).attr('href').replace(/^(#\!?|\.)/, '');
                     $.address.value(value);
                 }
-            }).on('submit', function(e) {
+            }).on('submit',function (e) {
                 var target = e.currentTarget;
                 if ($(target).is('form')) {
                     e.preventDefault();
                     var action = $(target).attr('action'),
-                        value = fn ? fn.call(target) : (action.indexOf('?') != -1 ? action.replace(/&$/, '') : action + '?') + 
+                        value = fn ? fn.call(target) : (action.indexOf('?') != -1 ? action.replace(/&$/, '') : action + '?') +
                             $(target).serialize();
                     $.address.value(value);
                 }
@@ -594,5 +596,5 @@
         }
         return this;
     };
-    
+
 })(jQuery);

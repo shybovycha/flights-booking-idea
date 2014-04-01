@@ -3,28 +3,36 @@
       xmlns:c="http://java.sun.com/jsp/jstl/core"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
->
-    <head>
-        <title>Booking Test Project</title>
-    </head>
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+        >
+<head>
+    <title>Booking Test Project</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
 
-    <body>
-        <ui:composition template="templates/user_layout.xhtml">
-            <ui:define name="content">
-                <div class="ui fluid raised form segment">
-                    <h:form>
-                      <div class="field">
-                        <h:inputText value="#{ search.destination }" />
-                      </div>
-
-                      <div class="field">
-                        <h:inputText value="#{ search.date }" styleClass="datepicker" />
-                      </div>
-
-                      <h:commandButton styleClass="ui blue submit button" action="#{ search.perform }" value="Find" />
-                  </h:form>
+<body>
+<ui:composition template="templates/user_layout.xhtml">
+    <ui:define name="content">
+        <div class="ui fluid raised form segment">
+            <h:form>
+                <div class="field">
+                    <div class="ui icon input">
+                        <i class="location icon"/>
+                        <h:inputText value="#{ search.destination }" p:placeholder="Travelling to"/>
+                    </div>
                 </div>
-            </ui:define>
-        </ui:composition>
-    </body>
+
+                <div class="field">
+                    <div class="ui icon input">
+                        <i class="calendar icon"/>
+                        <h:inputText value="#{ search.date }" styleClass="datepicker" p:placeholder="Travelling at"/>
+                    </div>
+                </div>
+
+                <h:commandButton styleClass="ui blue submit button" action="#{ search.perform }" value="Find"/>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>
+</body>
 </html>

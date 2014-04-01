@@ -7,6 +7,8 @@ import javax.faces.bean.SessionScoped;
 import entities.User;
 import managers.UserManager;
 
+import java.util.HashMap;
+
 @ManagedBean(name="login", eager=true)
 @SessionScoped
 public class LoginBean {

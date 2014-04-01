@@ -10,6 +10,10 @@ public abstract class UserManager {
         return UserDAO.all();
     }
 
+    public static User find(int id) {
+        return UserDAO.find(id);
+    }
+
     public static void destroyAll() {
         UserDAO.destroyAll();
     }

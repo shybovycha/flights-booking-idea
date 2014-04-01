@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     $('.ui.tabular.menu .item').tab();
     $('.ui.accordion').accordion();
     $('.ui.dropdown').dropdown();

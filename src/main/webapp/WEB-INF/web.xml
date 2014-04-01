@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="2.5" xmlns="/httpjava.sun.com/xml/ns/javaee"
+<web-app version="3.0" xmlns="/httpjava.sun.com/xml/ns/javaee"
          xmlns:xsi="/httpwww.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="/httpjava.sun.com/xml/ns/javaee
             /httpjava.sun.com/xml/ns/javaee/web-app_2_5.xsd">
@@ -28,7 +28,7 @@
     </servlet-mapping>
 
     <!--<context-param>-->
-        <!--<param-name>javax.faces.PROJECT_STAGE</param-name>-->
-        <!--<param-value>Development</param-value>-->
+    <!--<param-name>javax.faces.PROJECT_STAGE</param-name>-->
+    <!--<param-value>Production</param-value>-->
     <!--</context-param>-->
 </web-app>

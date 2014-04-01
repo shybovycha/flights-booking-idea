@@ -1,34 +1,35 @@
 <!DOCTYPE html>
-<html 
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
->
-    <head>
-        <title>Booking Test Project</title>
-    </head>
+<html
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+        >
+<head>
+    <title>Booking Test Project</title>
+</head>
 
-    <h:body>
-        <ui:composition template="templates/user_layout.xhtml">
-            <ui:define name="content">
-                <h:form>
-                    <div class="ui fluid raised form segment">
-                      <h3 class="ui header">Log-in</h3>
+<h:body>
+    <ui:composition template="templates/user_layout.xhtml">
+        <ui:define name="content">
+            <h:form>
+                <div class="ui fluid raised form segment">
+                    <h3 class="ui header">Log-in</h3>
 
-                      <div class="message">#{ login.message }</div>
+                    <div class="message">#{ login.message }</div>
 
-                      <div class="field">
-                        <h:inputText placeholder="Username" value="#{ login.username }"></h:inputText>
-                      </div>
-
-                      <div class="field">
-                        <h:inputSecret placeholder="Password" value="#{ login.password }"></h:inputSecret>
-                      </div>
-
-                      <h:commandButton styleClass="ui blue submit button" value="Login" action="#{ login.perform }"></h:commandButton>
+                    <div class="field">
+                        <h:inputText placeholder="Username" value="#{ login.username }" p:placeholder="Username"/>
                     </div>
-                </h:form>
-            </ui:define>
-        </ui:composition>
-    </h:body>
+
+                    <div class="field">
+                        <h:inputSecret placeholder="Password" value="#{ login.password }" p:placeholder="Password" />
+                    </div>
+
+                    <h:commandButton styleClass="ui blue submit button" value="Login" action="#{ login.perform }"/>
+                </div>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</h:body>
 </html>

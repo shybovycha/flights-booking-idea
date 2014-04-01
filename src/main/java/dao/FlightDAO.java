@@ -7,8 +7,6 @@ import java.util.List;
 import entities.*;
 
 public class FlightDAO extends BaseDAO {
-    protected static SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-
     public static void destroyAll() {
         destroyAll(Flight.class);
     }
@@ -27,18 +25,18 @@ public class FlightDAO extends BaseDAO {
     }
 
     public static List<Flight> find(String destination, Date date) {
-        String dateStr = new SimpleDateFormat("dd/MM/yyyy").format(date);
-        String query = String.format("SELECT f FROM Flight f WHERE destination LIKE '%%%s%%' AND date = %s",
+        String dateStr = new SimpleDateFormat("dd-MM-yyyy").format(date);
+        String query = String.format("SELECT f FROM Flight f WHERE f.destination LIKE '%%%s%%' AND f.date = '%s'",
                 destination, dateStr);
 
         return query(Flight.class, query);
     }
 
     public static List<Flight> find(String destination, Date dateFrom, Date dateTo) {
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         String dateFromStr = df.format(dateFrom);
         String dateToStr = df.format(dateTo);
-        String query = String.format("SELECT f FROM Flight f WHERE destination LIKE '%%%s%%' AND date BETWEEN '%s' AND '%s'",
+        String query = String.format("SELECT f FROM Flight f WHERE f.destination LIKE '%%%s%%' AND f.date BETWEEN '%s' AND '%s'",
                 destination, dateFromStr, dateToStr);
 
         return query(Flight.class, query);

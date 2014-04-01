@@ -1,6 +1,6 @@
 /*! UIkit 1.1.0 | http://www.getuikit.com | (c) 2013 YOOtheme | MIT License */
 
-(function($, doc) {
+(function ($, doc) {
 
     "use strict";
 
@@ -10,7 +10,7 @@
         return;
     }
 
-    UI.fn = function(command, options) {
+    UI.fn = function (command, options) {
 
         var args = arguments, cmd = command.match(/^([a-z\-]+)(?:\.([a-z]+))?/i), component = cmd[1], method = cmd[2];
 
@@ -19,7 +19,7 @@
             return this;
         }
 
-        return this.each(function() {
+        return this.each(function () {
             var $this = $(this), data = $this.data(component);
             if (!data) $this.data(component, (data = new UI[component](this, method ? undefined : options)));
             if (method) data[method].apply(data, Array.prototype.slice.call(args, 1));
@@ -27,9 +27,9 @@
     };
 
     UI.support = {};
-    UI.support.transition = (function() {
+    UI.support.transition = (function () {
 
-        var transitionEnd = (function() {
+        var transitionEnd = (function () {
 
             var element = doc.body || doc.documentElement,
                 transEndEventNames = {
@@ -56,11 +56,11 @@
 
     UI.Utils = {};
 
-    UI.Utils.debounce = function(func, wait, immediate) {
+    UI.Utils.debounce = function (func, wait, immediate) {
         var timeout;
-        return function() {
+        return function () {
             var context = this, args = arguments;
-            var later = function() {
+            var later = function () {
                 timeout = null;
                 if (!immediate) func.apply(context, args);
             };
@@ -71,7 +71,7 @@
         };
     };
 
-    UI.Utils.options = function(string) {
+    UI.Utils.options = function (string) {
 
         if ($.isPlainObject(string)) return string;
 
@@ -80,7 +80,8 @@
         if (start != -1) {
             try {
                 options = (new Function("", "var json = " + string.substr(start) + "; return JSON.parse(JSON.stringify(json));"))();
-            } catch (e) {}
+            } catch (e) {
+            }
         }
 
         return options;
@@ -93,125 +94,128 @@
 
 })(jQuery, document);
 
-;(function($){
-  var touch = {},
-    touchTimeout, tapTimeout, swipeTimeout,
-    longTapDelay = 750, longTapTimeout;
+;
+(function ($) {
+    var touch = {},
+        touchTimeout, tapTimeout, swipeTimeout,
+        longTapDelay = 750, longTapTimeout;
 
-  function parentIfText(node) {
-    return 'tagName' in node ? node : node.parentNode;
-  }
-
-  function swipeDirection(x1, x2, y1, y2) {
-    var xDelta = Math.abs(x1 - x2), yDelta = Math.abs(y1 - y2);
-    return xDelta >= yDelta ? (x1 - x2 > 0 ? 'Left' : 'Right') : (y1 - y2 > 0 ? 'Up' : 'Down');
-  }
-
-  function longTap() {
-    longTapTimeout = null;
-    if (touch.last) {
-      touch.el.trigger('longTap');
-      touch = {};
+    function parentIfText(node) {
+        return 'tagName' in node ? node : node.parentNode;
     }
-  }
 
-  function cancelLongTap() {
-    if (longTapTimeout) clearTimeout(longTapTimeout);
-    longTapTimeout = null;
-  }
+    function swipeDirection(x1, x2, y1, y2) {
+        var xDelta = Math.abs(x1 - x2), yDelta = Math.abs(y1 - y2);
+        return xDelta >= yDelta ? (x1 - x2 > 0 ? 'Left' : 'Right') : (y1 - y2 > 0 ? 'Up' : 'Down');
+    }
 
-  function cancelAll() {
-    if (touchTimeout) clearTimeout(touchTimeout);
-    if (tapTimeout) clearTimeout(tapTimeout);
-    if (swipeTimeout) clearTimeout(swipeTimeout);
-    if (longTapTimeout) clearTimeout(longTapTimeout);
-    touchTimeout = tapTimeout = swipeTimeout = longTapTimeout = null;
-    touch = {};
-  }
-
-  $(document).ready(function(){
-    var now, delta;
-
-    $(document.body)
-      .bind('touchstart', function(e){
-        now = Date.now();
-        delta = now - (touch.last || now);
-        touch.el = $(parentIfText(e.originalEvent.touches[0].target));
-        if(touchTimeout) clearTimeout(touchTimeout);
-        touch.x1 = e.originalEvent.touches[0].pageX;
-        touch.y1 = e.originalEvent.touches[0].pageY;
-        if (delta > 0 && delta <= 250) touch.isDoubleTap = true;
-        touch.last = now;
-        longTapTimeout = setTimeout(longTap, longTapDelay);
-      })
-      .bind('touchmove', function(e){
-        cancelLongTap();
-        touch.x2 = e.originalEvent.touches[0].pageX;
-        touch.y2 = e.originalEvent.touches[0].pageY;
-      })
-      .bind('touchend', function(e){
-         cancelLongTap();
-
-        // swipe
-        if ((touch.x2 && Math.abs(touch.x1 - touch.x2) > 30) || (touch.y2 && Math.abs(touch.y1 - touch.y2) > 30))
-
-          swipeTimeout = setTimeout(function() {
-            touch.el.trigger('swipe');
-            touch.el.trigger('swipe' + (swipeDirection(touch.x1, touch.x2, touch.y1, touch.y2)));
+    function longTap() {
+        longTapTimeout = null;
+        if (touch.last) {
+            touch.el.trigger('longTap');
             touch = {};
-          }, 0);
+        }
+    }
 
-        // normal tap
-        else if ('last' in touch)
+    function cancelLongTap() {
+        if (longTapTimeout) clearTimeout(longTapTimeout);
+        longTapTimeout = null;
+    }
 
-          // delay by one tick so we can cancel the 'tap' event if 'scroll' fires
-          // ('tap' fires before 'scroll')
-          tapTimeout = setTimeout(function() {
+    function cancelAll() {
+        if (touchTimeout) clearTimeout(touchTimeout);
+        if (tapTimeout) clearTimeout(tapTimeout);
+        if (swipeTimeout) clearTimeout(swipeTimeout);
+        if (longTapTimeout) clearTimeout(longTapTimeout);
+        touchTimeout = tapTimeout = swipeTimeout = longTapTimeout = null;
+        touch = {};
+    }
 
-            // trigger universal 'tap' with the option to cancelTouch()
-            // (cancelTouch cancels processing of single vs double taps for faster 'tap' response)
-            var event = $.Event('tap');
-            event.cancelTouch = cancelAll;
-            touch.el.trigger(event);
+    $(document).ready(function () {
+        var now, delta;
 
-            // trigger double tap immediately
-            if (touch.isDoubleTap) {
-              touch.el.trigger('doubleTap');
-              touch = {};
-            }
+        $(document.body)
+            .bind('touchstart', function (e) {
+                now = Date.now();
+                delta = now - (touch.last || now);
+                touch.el = $(parentIfText(e.originalEvent.touches[0].target));
+                if (touchTimeout) clearTimeout(touchTimeout);
+                touch.x1 = e.originalEvent.touches[0].pageX;
+                touch.y1 = e.originalEvent.touches[0].pageY;
+                if (delta > 0 && delta <= 250) touch.isDoubleTap = true;
+                touch.last = now;
+                longTapTimeout = setTimeout(longTap, longTapDelay);
+            })
+            .bind('touchmove', function (e) {
+                cancelLongTap();
+                touch.x2 = e.originalEvent.touches[0].pageX;
+                touch.y2 = e.originalEvent.touches[0].pageY;
+            })
+            .bind('touchend', function (e) {
+                cancelLongTap();
 
-            // trigger single tap after 250ms of inactivity
-            else {
-              touchTimeout = setTimeout(function(){
-                touchTimeout = null;
-                touch.el.trigger('singleTap');
-                touch = {};
-              }, 250);
-            }
+                // swipe
+                if ((touch.x2 && Math.abs(touch.x1 - touch.x2) > 30) || (touch.y2 && Math.abs(touch.y1 - touch.y2) > 30))
 
-          }, 0);
+                    swipeTimeout = setTimeout(function () {
+                        touch.el.trigger('swipe');
+                        touch.el.trigger('swipe' + (swipeDirection(touch.x1, touch.x2, touch.y1, touch.y2)));
+                        touch = {};
+                    }, 0);
 
-      })
-      .bind('touchcancel', cancelAll);
+                // normal tap
+                else if ('last' in touch)
 
-    $(window).bind('scroll', cancelAll);
-  });
+                // delay by one tick so we can cancel the 'tap' event if 'scroll' fires
+                // ('tap' fires before 'scroll')
+                    tapTimeout = setTimeout(function () {
 
-  ['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown', 'doubleTap', 'tap', 'singleTap', 'longTap'].forEach(function(m){
-    $.fn[m] = function(callback){ return this.bind(m, callback); };
-  });
+                        // trigger universal 'tap' with the option to cancelTouch()
+                        // (cancelTouch cancels processing of single vs double taps for faster 'tap' response)
+                        var event = $.Event('tap');
+                        event.cancelTouch = cancelAll;
+                        touch.el.trigger(event);
+
+                        // trigger double tap immediately
+                        if (touch.isDoubleTap) {
+                            touch.el.trigger('doubleTap');
+                            touch = {};
+                        }
+
+                        // trigger single tap after 250ms of inactivity
+                        else {
+                            touchTimeout = setTimeout(function () {
+                                touchTimeout = null;
+                                touch.el.trigger('singleTap');
+                                touch = {};
+                            }, 250);
+                        }
+
+                    }, 0);
+
+            })
+            .bind('touchcancel', cancelAll);
+
+        $(window).bind('scroll', cancelAll);
+    });
+
+    ['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown', 'doubleTap', 'tap', 'singleTap', 'longTap'].forEach(function (m) {
+        $.fn[m] = function (callback) {
+            return this.bind(m, callback);
+        };
+    });
 })(jQuery);
 
-(function($, UI) {
+(function ($, UI) {
 
     "use strict";
 
-    var Alert = function(element, options) {
+    var Alert = function (element, options) {
 
         var $this = this;
 
         this.options = $.extend({}, this.options, options);
-        this.element = $(element).on("click", this.options.trigger, function(e) {
+        this.element = $(element).on("click", this.options.trigger, function (e) {
             e.preventDefault();
             $this.close();
         });
@@ -225,7 +229,7 @@
             "trigger": ".uk-alert-close"
         },
 
-        close: function() {
+        close: function () {
 
             var element = this.element.trigger("close");
 
@@ -252,7 +256,7 @@
     UI["alert"] = Alert;
 
     // init code
-    $(document).on("click.alert.uikit", "[data-uk-alert]", function(e) {
+    $(document).on("click.alert.uikit", "[data-uk-alert]", function (e) {
 
         var ele = $(this);
         if (!ele.data("alert")) {
@@ -269,16 +273,16 @@
 
 })(jQuery, jQuery.UIkit);
 
-(function($, UI) {
+(function ($, UI) {
 
     "use strict";
 
-    var ButtonRadio = function(element, options) {
+    var ButtonRadio = function (element, options) {
 
         var $this = this, $element = $(element);
 
         this.options = $.extend({}, this.options, options);
-        this.element = $element.on("click", this.options.target, function(e) {
+        this.element = $element.on("click", this.options.target, function (e) {
             e.preventDefault();
             $element.find($this.options.target).not(this).removeClass("uk-active").blur();
             $element.trigger("change", [$(this).addClass("uk-active")]);
@@ -291,18 +295,18 @@
             "target": ".uk-button"
         },
 
-        getSelected: function() {
+        getSelected: function () {
             this.element.find(".uk-active");
         }
 
     });
 
-    var ButtonCheckbox = function(element, options) {
+    var ButtonCheckbox = function (element, options) {
 
         var $element = $(element);
 
         this.options = $.extend({}, this.options, options);
-        this.element = $element.on("click", this.options.target, function(e) {
+        this.element = $element.on("click", this.options.target, function (e) {
             e.preventDefault();
             $element.trigger("change", [$(this).toggleClass("uk-active").blur()]);
         });
@@ -314,17 +318,17 @@
             "target": ".uk-button"
         },
 
-        getSelected: function() {
+        getSelected: function () {
             this.element.find(".uk-active");
         }
 
     });
 
-    var Button = function(element) {
+    var Button = function (element) {
 
         var $this = this;
 
-        this.element = $(element).on("click", function(e) {
+        this.element = $(element).on("click", function (e) {
             e.preventDefault();
             $this.toggle();
             $this.element.blur();
@@ -333,7 +337,7 @@
 
     $.extend(Button.prototype, {
 
-        toggle: function() {
+        toggle: function () {
             this.element.toggleClass("uk-active");
         }
 
@@ -344,7 +348,7 @@
     UI["button-radio"] = ButtonRadio;
 
     // init code
-    $(document).on("click.button-radio.uikit", "[data-uk-button-radio]", function(e) {
+    $(document).on("click.button-radio.uikit", "[data-uk-button-radio]", function (e) {
         var ele = $(this);
 
         if (!ele.data("button-radio")) {
@@ -356,7 +360,7 @@
         }
     });
 
-    $(document).on("click.button-checkbox.uikit", "[data-uk-button-checkbox]", function(e) {
+    $(document).on("click.button-checkbox.uikit", "[data-uk-button-checkbox]", function (e) {
         var ele = $(this);
 
         if (!ele.data("button-checkbox")) {
@@ -368,7 +372,7 @@
         }
     });
 
-    $(document).on("click.button.uikit", "[data-uk-button]", function(e) {
+    $(document).on("click.button.uikit", "[data-uk-button]", function (e) {
         var ele = $(this);
 
         if (!ele.data("button")) {
@@ -378,101 +382,101 @@
 
 })(jQuery, jQuery.UIkit);
 
-(function($, UI) {
+(function ($, UI) {
 
     "use strict";
 
-    var active   = false,
-        Dropdown = function(element, options) {
+    var active = false,
+        Dropdown = function (element, options) {
 
-        var $this = this;
+            var $this = this;
 
-        this.options  = $.extend({}, this.options, options);
-        this.element  = $(element);
-        this.dropdown = this.element.find(".uk-dropdown");
+            this.options = $.extend({}, this.options, options);
+            this.element = $(element);
+            this.dropdown = this.element.find(".uk-dropdown");
 
-        this.centered  = this.dropdown.hasClass("uk-dropdown-center");
-        this.justified = this.options.justify ? $(this.options.justify) : false;
+            this.centered = this.dropdown.hasClass("uk-dropdown-center");
+            this.justified = this.options.justify ? $(this.options.justify) : false;
 
-        this.boundary  = $(this.options.boundary);
+            this.boundary = $(this.options.boundary);
 
-        if(!this.boundary.length) {
-            this.boundary = $(window);
-        }
+            if (!this.boundary.length) {
+                this.boundary = $(window);
+            }
 
-        if (this.options.mode == "click") {
+            if (this.options.mode == "click") {
 
-            this.element.on("click", function(e) {
+                this.element.on("click", function (e) {
 
-                if (!$(e.target).parents(".uk-dropdown").length) {
-                    e.preventDefault();
-                }
+                    if (!$(e.target).parents(".uk-dropdown").length) {
+                        e.preventDefault();
+                    }
 
-                if (active && active[0] != $this.element[0]) {
-                    active.removeClass("uk-open");
-                }
+                    if (active && active[0] != $this.element[0]) {
+                        active.removeClass("uk-open");
+                    }
 
-                if (!$this.element.hasClass("uk-open")) {
+                    if (!$this.element.hasClass("uk-open")) {
+
+                        $this.checkDimensions();
+
+                        $this.element.addClass("uk-open");
+
+                        active = $this.element;
+
+                        $(document).off("click.outer.dropdown");
+
+                        setTimeout(function () {
+                            $(document).on("click.outer.dropdown", function (e) {
+
+                                if (active && active[0] == $this.element[0] && ($(e.target).is("a") || !$this.element.find(".uk-dropdown").find(e.target).length)) {
+                                    active.removeClass("uk-open");
+
+                                    $(document).off("click.outer.dropdown");
+                                }
+                            });
+                        }, 10);
+
+                    } else {
+
+                        if ($(e.target).is("a") || !$this.element.find(".uk-dropdown").find(e.target).length) {
+                            $this.element.removeClass("uk-open");
+                            active = false;
+                        }
+                    }
+                });
+
+            } else {
+
+                this.element.on("mouseenter",function (e) {
+
+                    if ($this.remainIdle) {
+                        clearTimeout($this.remainIdle);
+                    }
+
+                    if (active && active[0] != $this.element[0]) {
+                        active.removeClass("uk-open");
+                    }
 
                     $this.checkDimensions();
 
                     $this.element.addClass("uk-open");
-
                     active = $this.element;
 
-                    $(document).off("click.outer.dropdown");
+                }).on("mouseleave", function () {
 
-                    setTimeout(function() {
-                        $(document).on("click.outer.dropdown", function(e) {
+                    $this.remainIdle = setTimeout(function () {
 
-                            if (active && active[0] == $this.element[0] && ($(e.target).is("a") || !$this.element.find(".uk-dropdown").find(e.target).length)) {
-                                active.removeClass("uk-open");
-
-                                $(document).off("click.outer.dropdown");
-                            }
-                        });
-                    }, 10);
-
-                } else {
-
-                    if ($(e.target).is("a") || !$this.element.find(".uk-dropdown").find(e.target).length) {
                         $this.element.removeClass("uk-open");
-                        active = false;
-                    }
-                }
-            });
+                        $this.remainIdle = false;
 
-        } else {
+                        if (active && active[0] == $this.element[0]) active = false;
 
-            this.element.on("mouseenter", function(e) {
+                    }, $this.options.remaintime);
+                });
+            }
 
-                if ($this.remainIdle) {
-                    clearTimeout($this.remainIdle);
-                }
-
-                if (active && active[0] != $this.element[0]) {
-                    active.removeClass("uk-open");
-                }
-
-                $this.checkDimensions();
-
-                $this.element.addClass("uk-open");
-                active = $this.element;
-
-            }).on("mouseleave", function() {
-
-                $this.remainIdle = setTimeout(function() {
-
-                    $this.element.removeClass("uk-open");
-                    $this.remainIdle = false;
-
-                    if (active && active[0] == $this.element[0]) active = false;
-
-                }, $this.options.remaintime);
-            });
-        }
-
-    };
+        };
 
     $.extend(Dropdown.prototype, {
 
@@ -485,15 +489,15 @@
             "boundary": $(window)
         },
 
-        checkDimensions: function() {
+        checkDimensions: function () {
 
-            if(!this.dropdown.length) return;
+            if (!this.dropdown.length) return;
 
-            var dropdown  = this.dropdown.css("margin-" + $.UIkit.langdirection, "").css("min-width", ""),
-                offset    = dropdown.show().offset(),
-                width     = dropdown.outerWidth(),
-                boundarywidth  = this.boundary.width(),
-                boundaryoffset = this.boundary.offset() ? this.boundary.offset().left:0;
+            var dropdown = this.dropdown.css("margin-" + $.UIkit.langdirection, "").css("min-width", ""),
+                offset = dropdown.show().offset(),
+                width = dropdown.outerWidth(),
+                boundarywidth = this.boundary.width(),
+                boundaryoffset = this.boundary.offset() ? this.boundary.offset().left : 0;
 
             // centered dropdown
             if (this.centered) {
@@ -516,8 +520,8 @@
 
                 if ($.UIkit.langdirection == 'right') {
 
-                    var right1   = boundarywidth - (this.justified.offset().left + jwidth),
-                        right2   = boundarywidth - (dropdown.offset().left + dropdown.outerWidth());
+                    var right1 = boundarywidth - (this.justified.offset().left + jwidth),
+                        right2 = boundarywidth - (dropdown.offset().left + dropdown.outerWidth());
 
                     dropdown.css("margin-right", right1 - right2);
 
@@ -529,7 +533,7 @@
 
             }
 
-            if ((width + (offset.left-boundaryoffset)) > boundarywidth) {
+            if ((width + (offset.left - boundaryoffset)) > boundarywidth) {
                 dropdown.addClass("uk-dropdown-flip");
                 offset = dropdown.offset();
             }
@@ -546,7 +550,7 @@
     UI["dropdown"] = Dropdown;
 
     // init code
-    $(document).on("mouseenter.dropdown.uikit", "[data-uk-dropdown]", function(e) {
+    $(document).on("mouseenter.dropdown.uikit", "[data-uk-dropdown]", function (e) {
         var ele = $(this);
 
         if (!ele.data("dropdown")) {
@@ -560,31 +564,31 @@
 
 })(jQuery, jQuery.UIkit);
 
-(function($, UI) {
+(function ($, UI) {
 
     "use strict";
 
-    var win         = $(window),
-        event       = 'resize orientationchange',
+    var win = $(window),
+        event = 'resize orientationchange',
 
-        GridMatchHeight = function(element, options) {
+        GridMatchHeight = function (element, options) {
 
             var $this = this;
 
-            this.options  = $.extend({}, this.options, options);
+            this.options = $.extend({}, this.options, options);
 
-            this.element  = $(element);
-            this.columns  = this.element.children();
+            this.element = $(element);
+            this.columns = this.element.children();
             this.elements = this.options.target ? this.element.find(this.options.target) : this.columns;
 
             if (!this.columns.length) return;
 
-            win.on(event, (function() {
-                var fn = function() {
+            win.on(event, (function () {
+                var fn = function () {
                     $this.match();
                 };
 
-                $(function() {
+                $(function () {
                     fn();
                     win.on("load", fn);
                 });
@@ -599,7 +603,7 @@
             "target": false
         },
 
-        match: function() {
+        match: function () {
 
             this.revert();
 
@@ -608,19 +612,19 @@
             if (!firstvisible.length) return;
 
             var stacked = Math.ceil(100 * parseFloat(firstvisible.css('width')) / parseFloat(firstvisible.parent().css('width'))) >= 100 ? true : false,
-                max     = 0,
-                $this   = this;
+                max = 0,
+                $this = this;
 
             if (stacked) return;
 
-            this.elements.each(function() {
+            this.elements.each(function () {
                 max = Math.max(max, $(this).outerHeight());
-            }).each(function(i) {
+            }).each(function (i) {
 
-                var element   = $(this),
+                var element = $(this),
                     boxheight = element.css("box-sizing") == "border-box" ? "outerHeight" : "height",
-                    box       = $this.columns.eq(i),
-                    height    = (element.height() + (max - box[boxheight]()));
+                    box = $this.columns.eq(i),
+                    height = (element.height() + (max - box[boxheight]()));
 
                 element.css('min-height', height + 'px');
             });
@@ -628,14 +632,14 @@
             return this;
         },
 
-        revert: function() {
+        revert: function () {
             this.elements.css('min-height', '');
             return this;
         }
 
     });
 
-    var GridMargin = function(element) {
+    var GridMargin = function (element) {
 
         var $this = this;
 
@@ -644,12 +648,12 @@
 
         if (!this.columns.length) return;
 
-        win.on(event, (function() {
-            var fn = function() {
+        win.on(event, (function () {
+            var fn = function () {
                 $this.process();
             };
 
-            $(function() {
+            $(function () {
                 fn();
                 win.on("load", fn);
             });
@@ -660,17 +664,17 @@
 
     $.extend(GridMargin.prototype, {
 
-        process: function() {
+        process: function () {
 
             this.revert();
 
-            var skip         = false,
+            var skip = false,
                 firstvisible = this.columns.filter(":visible:first"),
-                offset       = firstvisible.length ? firstvisible.offset().top : false;
+                offset = firstvisible.length ? firstvisible.offset().top : false;
 
             if (offset === false) return;
 
-            this.columns.each(function() {
+            this.columns.each(function () {
 
                 var column = $(this);
 
@@ -691,19 +695,19 @@
             return this;
         },
 
-        revert: function() {
+        revert: function () {
             this.columns.removeClass('uk-grid-margin');
             return this;
         }
 
     });
 
-    UI["grid-match"]  = GridMatchHeight;
+    UI["grid-match"] = GridMatchHeight;
     UI["grid-margin"] = GridMargin;
 
     // init code
-    $(function() {
-        $("[data-uk-grid-match],[data-uk-grid-margin]").each(function() {
+    $(function () {
+        $("[data-uk-grid-match],[data-uk-grid-margin]").each(function () {
             var grid = $(this);
 
             if (grid.is("[data-uk-grid-match]") && !grid.data("grid-match")) {
@@ -718,14 +722,14 @@
 
 })(jQuery, jQuery.UIkit);
 
-(function($, UI, $win) {
+(function ($, UI, $win) {
 
     "use strict";
 
     var active = false,
-        html   = $("html"),
+        html = $("html"),
 
-        Modal  = function(element, options) {
+        Modal = function (element, options) {
 
             var $this = this;
 
@@ -737,13 +741,13 @@
             }, options);
 
             this.transition = UI.support.transition;
-            this.dialog     = this.element.find(".uk-modal-dialog");
+            this.dialog = this.element.find(".uk-modal-dialog");
 
-            this.element.on("click", ".uk-modal-close", function(e) {
+            this.element.on("click", ".uk-modal-close",function (e) {
                 e.preventDefault();
                 $this.hide();
 
-            }).on("click", function(e) {
+            }).on("click", function (e) {
 
                 var target = $(e.target);
 
@@ -754,7 +758,7 @@
             });
 
             if (this.options.keyboard) {
-                $(document).on('keyup.ui.modal.escape', function(e) {
+                $(document).on('keyup.ui.modal.escape', function (e) {
                     if (active && e.which == 27 && $this.isActive()) $this.hide();
                 });
             }
@@ -764,11 +768,11 @@
 
         transition: false,
 
-        toggle: function() {
+        toggle: function () {
             this[this.isActive() ? "hide" : "show"]();
         },
 
-        show: function() {
+        show: function () {
 
             var $this = this;
 
@@ -785,7 +789,7 @@
             this.element.addClass("uk-open").trigger("uk.modal.show");
         },
 
-        hide: function(force) {
+        hide: function (force) {
 
             if (!this.isActive()) return;
 
@@ -793,7 +797,7 @@
 
                 var $this = this;
 
-                this.element.one(UI.support.transition.end, function() {
+                this.element.one(UI.support.transition.end,function () {
                     $this._hide();
                 }).removeClass("uk-open");
 
@@ -803,36 +807,36 @@
             }
         },
 
-        resize: function() {
+        resize: function () {
 
             this.dialog.css("margin-left", "");
 
             var modalwidth = parseInt(this.dialog.css("width"), 10),
-                inview     = (modalwidth + parseInt(this.dialog.css("margin-left"),10) + parseInt(this.dialog.css("margin-right"),10)) < $win.width();
+                inview = (modalwidth + parseInt(this.dialog.css("margin-left"), 10) + parseInt(this.dialog.css("margin-right"), 10)) < $win.width();
 
-            this.dialog.css("margin-left", modalwidth && inview ? -1*Math.ceil(modalwidth/2) : "");
+            this.dialog.css("margin-left", modalwidth && inview ? -1 * Math.ceil(modalwidth / 2) : "");
         },
 
-        _hide: function() {
+        _hide: function () {
 
             this.element.hide().removeClass("uk-open");
 
             html.removeClass("uk-modal-page");
 
-            if(active===this) active = false;
+            if (active === this) active = false;
 
             this.element.trigger("uk.modal.hide");
         },
 
-        isActive: function() {
+        isActive: function () {
             return (active == this);
         }
 
     });
 
-    var ModalTrigger = function(element, options) {
+    var ModalTrigger = function (element, options) {
 
-        var $this    = this,
+        var $this = this,
             $element = $(element);
 
         this.options = $.extend({
@@ -843,15 +847,17 @@
 
         this.modal = new Modal(this.options.target, options);
 
-        $element.on("click", function(e) {
+        $element.on("click", function (e) {
             e.preventDefault();
             $this.show();
         });
 
         //methods
 
-        $.each(["show", "hide", "isActive"], function(index, method) {
-            $this[method] = function() { return $this.modal[method](); };
+        $.each(["show", "hide", "isActive"], function (index, method) {
+            $this[method] = function () {
+                return $this.modal[method]();
+            };
         });
     };
 
@@ -860,7 +866,7 @@
     UI["modal"] = ModalTrigger;
 
     // init code
-    $(document).on("click.modal.uikit", "[data-uk-modal]", function(e) {
+    $(document).on("click.modal.uikit", "[data-uk-modal]", function (e) {
         var ele = $(this);
 
         if (!ele.data("modal")) {
@@ -871,15 +877,15 @@
 
     });
 
-    $win.on("resize orientationchange", UI.Utils.debounce(function(){
+    $win.on("resize orientationchange", UI.Utils.debounce(function () {
 
-        if(active) active.resize();
+        if (active) active.resize();
 
     }, 150));
 
 })(jQuery, jQuery.UIkit, jQuery(window));
 
-(function($, UI) {
+(function ($, UI) {
 
     "use strict";
 
@@ -887,89 +893,89 @@
         $("html").addClass("uk-touch");
     }
 
-    var $win      = $(window),
-        $doc      = $(document),
+    var $win = $(window),
+        $doc = $(document),
         Offcanvas = {
 
-        show: function(element) {
+            show: function (element) {
 
-            element = $(element);
+                element = $(element);
 
-            if (!element.length) return;
+                if (!element.length) return;
 
-            var doc       = $("html"),
-                bar       = element.find(".uk-offcanvas-bar:first"),
-                dir       = bar.hasClass("uk-offcanvas-bar-flip") ? -1 : 1,
-                scrollbar = dir == -1 && $win.width() < window.innerWidth ? (window.innerWidth - $win.width()) : 0;
+                var doc = $("html"),
+                    bar = element.find(".uk-offcanvas-bar:first"),
+                    dir = bar.hasClass("uk-offcanvas-bar-flip") ? -1 : 1,
+                    scrollbar = dir == -1 && $win.width() < window.innerWidth ? (window.innerWidth - $win.width()) : 0;
 
-            scrollpos = {x: window.scrollX, y: window.scrollY};
+                scrollpos = {x: window.scrollX, y: window.scrollY};
 
-            element.addClass("uk-active");
+                element.addClass("uk-active");
 
-            doc.css({"width": window.innerWidth, "height": window.innerHeight}).addClass("uk-offcanvas-page");
-            doc.css("margin-left", ((bar.outerWidth() - scrollbar) * dir)).width(); // .width() - force redraw
+                doc.css({"width": window.innerWidth, "height": window.innerHeight}).addClass("uk-offcanvas-page");
+                doc.css("margin-left", ((bar.outerWidth() - scrollbar) * dir)).width(); // .width() - force redraw
 
-            bar.addClass("uk-offcanvas-bar-show").width();
+                bar.addClass("uk-offcanvas-bar-show").width();
 
-            element.off(".ukoffcanvas").on("click.ukoffcanvas swipeRight.ukoffcanvas swipeLeft.ukoffcanvas", function(e) {
+                element.off(".ukoffcanvas").on("click.ukoffcanvas swipeRight.ukoffcanvas swipeLeft.ukoffcanvas", function (e) {
 
-                var target = $(e.target);
+                    var target = $(e.target);
 
-                if (!e.type.match(/swipe/)) {
-                    if (target.hasClass("uk-offcanvas-bar")) return;
-                    if (target.parents(".uk-offcanvas-bar:first").length) return;
-                }
+                    if (!e.type.match(/swipe/)) {
+                        if (target.hasClass("uk-offcanvas-bar")) return;
+                        if (target.parents(".uk-offcanvas-bar:first").length) return;
+                    }
 
-                e.stopImmediatePropagation();
+                    e.stopImmediatePropagation();
 
-                Offcanvas.hide();
-            });
-
-            $doc.on('keydown.offcanvas', function(e) {
-                if (e.keyCode === 27) { // ESC
                     Offcanvas.hide();
-                }
-            });
-        },
+                });
 
-        hide: function(force) {
+                $doc.on('keydown.offcanvas', function (e) {
+                    if (e.keyCode === 27) { // ESC
+                        Offcanvas.hide();
+                    }
+                });
+            },
 
-            var doc   = $("html"),
-                panel = $(".uk-offcanvas.uk-active"),
-                bar   = panel.find(".uk-offcanvas-bar:first");
+            hide: function (force) {
 
-            if (!panel.length) return;
+                var doc = $("html"),
+                    panel = $(".uk-offcanvas.uk-active"),
+                    bar = panel.find(".uk-offcanvas-bar:first");
 
-            if ($.UIkit.support.transition && !force) {
+                if (!panel.length) return;
+
+                if ($.UIkit.support.transition && !force) {
 
 
-                doc.one($.UIkit.support.transition.end, function() {
+                    doc.one($.UIkit.support.transition.end,function () {
+                        doc.removeClass("uk-offcanvas-page").attr("style", "");
+                        panel.removeClass("uk-active");
+                        window.scrollTo(scrollpos.x, scrollpos.y);
+                    }).css("margin-left", "");
+
+                    setTimeout(function () {
+                        bar.removeClass("uk-offcanvas-bar-show");
+                    }, 50);
+
+                } else {
                     doc.removeClass("uk-offcanvas-page").attr("style", "");
                     panel.removeClass("uk-active");
-                    window.scrollTo(scrollpos.x, scrollpos.y);
-                }).css("margin-left", "");
-
-                setTimeout(function(){
                     bar.removeClass("uk-offcanvas-bar-show");
-                }, 50);
+                    window.scrollTo(scrollpos.x, scrollpos.y);
+                }
 
-            } else {
-                doc.removeClass("uk-offcanvas-page").attr("style", "");
-                panel.removeClass("uk-active");
-                bar.removeClass("uk-offcanvas-bar-show");
-                window.scrollTo(scrollpos.x, scrollpos.y);
+                panel.off(".ukoffcanvas");
+                $doc.off(".ukoffcanvas");
             }
 
-            panel.off(".ukoffcanvas");
-            $doc.off(".ukoffcanvas");
-        }
-
-    }, scrollpos;
+        }, scrollpos;
 
 
-    var OffcanvasTrigger = function(element, options) {
+    var OffcanvasTrigger = function (element, options) {
 
-        var $this    = this,
+        var $this = this,
             $element = $(element);
 
         this.options = $.extend({
@@ -978,7 +984,7 @@
 
         this.element = $element;
 
-        $element.on("click", function(e) {
+        $element.on("click", function (e) {
             e.preventDefault();
             Offcanvas.show($this.options.target);
         });
@@ -990,7 +996,7 @@
 
 
     // init code
-    $doc.on("click.offcanvas.uikit", "[data-uk-offcanvas]", function(e) {
+    $doc.on("click.offcanvas.uikit", "[data-uk-offcanvas]", function (e) {
 
         e.preventDefault();
 
@@ -1005,16 +1011,16 @@
 
 })(jQuery, jQuery.UIkit);
 
-(function($, UI) {
+(function ($, UI) {
 
     "use strict";
 
-    var Nav = function(element, options) {
+    var Nav = function (element, options) {
 
         var $this = this;
 
         this.options = $.extend({}, this.options, options);
-        this.element = $(element).on("click", this.options.toggler, function(e) {
+        this.element = $(element).on("click", this.options.toggler, function (e) {
             e.preventDefault();
 
             var ele = $(this);
@@ -1022,8 +1028,8 @@
             $this.open(ele.parent()[0] == $this.element[0] ? ele : ele.parent("li"));
         });
 
-        this.element.find(this.options.lists).each(function() {
-            var $ele   = $(this),
+        this.element.find(this.options.lists).each(function () {
+            var $ele = $(this),
                 parent = $ele.parent(),
                 active = parent.hasClass("uk-active");
 
@@ -1042,15 +1048,15 @@
             "multiple": false
         },
 
-        open: function(li, noanimation) {
+        open: function (li, noanimation) {
 
             var element = this.element, $li = $(li);
 
             if (!this.options.multiple) {
 
-                element.children(".uk-open").not(li).each(function() {
+                element.children(".uk-open").not(li).each(function () {
                     if ($(this).data("list-container")) {
-                        $(this).data("list-container").stop().animate({height: 0}, function() {
+                        $(this).data("list-container").stop().animate({height: 0}, function () {
                             $(this).parent().removeClass("uk-open");
                         });
                     }
@@ -1097,8 +1103,8 @@
     }
 
     // init code
-    $(function() {
-        $("[data-uk-nav]").each(function() {
+    $(function () {
+        $("[data-uk-nav]").each(function () {
             var nav = $(this);
 
             if (!nav.data("nav")) {
@@ -1109,24 +1115,32 @@
 
 })(jQuery, jQuery.UIkit);
 
-(function($, UI) {
+(function ($, UI) {
 
     "use strict";
 
     var $tooltip; // tooltip container
 
 
-    var Tooltip = function(element, options) {
+    var Tooltip = function (element, options) {
 
         var $this = this;
 
         this.options = $.extend({}, this.options, options);
 
         this.element = $(element).on({
-            "focus"     : function(e) { $this.show(); },
-            "blur"      : function(e) { $this.hide(); },
-            "mouseenter": function(e) { $this.show(); },
-            "mouseleave": function(e) { $this.hide(); }
+            "focus": function (e) {
+                $this.show();
+            },
+            "blur": function (e) {
+                $this.hide();
+            },
+            "mouseenter": function (e) {
+                $this.show();
+            },
+            "mouseleave": function (e) {
+                $this.hide();
+            }
         });
 
         this.tip = typeof(this.options.src) === "function" ? this.options.src.call(this.element) : this.options.src;
@@ -1142,22 +1156,24 @@
         options: {
             "offset": 5,
             "pos": "top",
-            "src": function() { return this.attr("title"); }
+            "src": function () {
+                return this.attr("title");
+            }
         },
 
-        show: function() {
+        show: function () {
 
             if (!this.tip.length) return;
 
             $tooltip.css({"top": -2000, "visibility": "hidden"}).show();
             $tooltip.html('<div class="uk-tooltip-inner">' + this.tip + '</div>');
 
-            var pos      = $.extend({}, this.element.offset(), {width: this.element[0].offsetWidth, height: this.element[0].offsetHeight}),
-                width    = $tooltip[0].offsetWidth,
-                height   = $tooltip[0].offsetHeight,
-                offset   = typeof(this.options.offset) === "function" ? this.options.offset.call(this.element) : this.options.offset,
+            var pos = $.extend({}, this.element.offset(), {width: this.element[0].offsetWidth, height: this.element[0].offsetHeight}),
+                width = $tooltip[0].offsetWidth,
+                height = $tooltip[0].offsetHeight,
+                offset = typeof(this.options.offset) === "function" ? this.options.offset.call(this.element) : this.options.offset,
                 position = typeof(this.options.pos) === "function" ? this.options.pos.call(this.element) : this.options.pos,
-                tcss     = {
+                tcss = {
                     "display": "none",
                     "visibility": "visible",
                     "top": (pos.top + pos.height + height),
@@ -1193,12 +1209,12 @@
 
         },
 
-        hide: function() {
-            if(this.element.is("input") && this.element[0]===document.activeElement) return;
+        hide: function () {
+            if (this.element.is("input") && this.element[0] === document.activeElement) return;
             $tooltip.hide();
         },
 
-        content: function() {
+        content: function () {
             return this.tip;
         }
 
@@ -1206,12 +1222,12 @@
 
     UI["tooltip"] = Tooltip;
 
-    $(function() {
+    $(function () {
         $tooltip = $('<div class="uk-tooltip"></div>').appendTo("body");
     });
 
     // init code
-    $(document).on("mouseenter.tooltip.uikit focus.tooltip.uikit", "[data-uk-tooltip]", function(e) {
+    $(document).on("mouseenter.tooltip.uikit focus.tooltip.uikit", "[data-uk-tooltip]", function (e) {
         var ele = $(this);
 
         if (!ele.data("tooltip")) {
@@ -1221,17 +1237,17 @@
 
 })(jQuery, jQuery.UIkit);
 
-(function($, UI) {
+(function ($, UI) {
 
     "use strict";
 
-    var Switcher = function(element, options) {
+    var Switcher = function (element, options) {
 
         var $this = this;
 
         this.options = $.extend({}, this.options, options);
 
-        this.element = $(element).on("click", this.options.toggler, function(e) {
+        this.element = $(element).on("click", this.options.toggler, function (e) {
             e.preventDefault();
             $this.show(this);
         });
@@ -1256,7 +1272,7 @@
             toggler: ">*"
         },
 
-        show: function(tab) {
+        show: function (tab) {
 
             tab = isNaN(tab) ? $(tab) : this.element.find(this.options.toggler).eq(tab);
 
@@ -1282,8 +1298,8 @@
     UI["switcher"] = Switcher;
 
     // init code
-    $(function() {
-        $("[data-uk-switcher]").each(function() {
+    $(function () {
+        $("[data-uk-switcher]").each(function () {
             var switcher = $(this);
 
             if (!switcher.data("switcher")) {
@@ -1294,13 +1310,13 @@
 
 })(jQuery, jQuery.UIkit);
 
-(function($, UI) {
+(function ($, UI) {
 
     "use strict";
 
-    var Tab = function(element, options) {
+    var Tab = function (element, options) {
 
-        var $this    = this;
+        var $this = this;
 
         this.element = $(element);
         this.options = $.extend({
@@ -1320,19 +1336,19 @@
         }
 
         var mobiletab = $('<li class="uk-tab-responsive uk-active"><a href="javascript:void(0);"></a></li>'),
-            caption   = mobiletab.find("a:first"),
-            dropdown  = $('<div class="uk-dropdown uk-dropdown-small"><ul class="uk-nav uk-nav-dropdown"></ul><div>'),
-            ul        = dropdown.find("ul");
+            caption = mobiletab.find("a:first"),
+            dropdown = $('<div class="uk-dropdown uk-dropdown-small"><ul class="uk-nav uk-nav-dropdown"></ul><div>'),
+            ul = dropdown.find("ul");
 
         caption.html(this.element.find("li.uk-active:first").find("a").text());
 
         if (this.element.hasClass("uk-tab-bottom")) dropdown.addClass("uk-dropdown-up");
         if (this.element.hasClass("uk-tab-flip")) dropdown.addClass("uk-dropdown-flip");
 
-        this.element.find("a").each(function(i) {
+        this.element.find("a").each(function (i) {
 
-            var tab  = $(this).parent(),
-                item = $('<li><a href="javascript:void(0);">' + tab.text() + '</a></li>').on("click", function(e) {
+            var tab = $(this).parent(),
+                item = $('<li><a href="javascript:void(0);">' + tab.text() + '</a></li>').on("click", function (e) {
                     $this.element.data("switcher").show(i);
                 });
 
@@ -1346,7 +1362,7 @@
         this.element.append(mobiletab).data({
             "dropdown": mobiletab.data("dropdown"),
             "mobilecaption": caption
-        }).on("uk.switcher.show", function(e, tab) {
+        }).on("uk.switcher.show", function (e, tab) {
             mobiletab.addClass("uk-active");
             caption.html(tab.find("a").text());
         });
@@ -1356,8 +1372,8 @@
     UI["tab"] = Tab;
 
     // init code
-    $(function() {
-        $("[data-uk-tab]").each(function() {
+    $(function () {
+        $("[data-uk-tab]").each(function () {
             var tab = $(this);
 
             if (!tab.data("tab")) {
@@ -1368,11 +1384,11 @@
 
 })(jQuery, jQuery.UIkit);
 
-(function($, UI) {
+(function ($, UI) {
 
     "use strict";
 
-    var Search = function(element, options) {
+    var Search = function (element, options) {
 
         var $this = this;
 
@@ -1383,11 +1399,11 @@
         this.timer = null;
         this.value = null;
         this.input = this.element.find(".uk-search-field");
-        this.form  = this.input.length ? $(this.input.get(0).form) : $();
+        this.form = this.input.length ? $(this.input.get(0).form) : $();
         this.input.attr('autocomplete', 'off');
 
         this.input.on({
-            keydown: function(event) {
+            keydown: function (event) {
                 $this.form[($this.input.val()) ? 'addClass' : 'removeClass']($this.options.filledClass);
 
                 if (event && event.which && !event.shiftKey) {
@@ -1415,15 +1431,17 @@
                 }
 
             },
-            keyup: function(event) {
+            keyup: function (event) {
                 $this.trigger();
             },
-            blur: function(event) {
-                setTimeout(function() { $this.hide(event); }, 200);
+            blur: function (event) {
+                setTimeout(function () {
+                    $this.hide(event);
+                }, 200);
             }
         });
 
-        this.form.find('button[type=reset]').bind('click', function() {
+        this.form.find('button[type=reset]').bind('click', function () {
             $this.form.removeClass("uk-open").removeClass("uk-loading").removeClass("uk-active");
             $this.value = null;
             $this.input.focus();
@@ -1457,11 +1475,15 @@
             msgResultsHeader: 'Search Results',
             msgMoreResults: 'More Results',
             msgNoResults: 'No results found',
-            onSelect: function(selected) { window.location = selected.data('choice').url; },
-            onLoadedResults: function(results) { return results; }
+            onSelect: function (selected) {
+                window.location = selected.data('choice').url;
+            },
+            onLoadedResults: function (results) {
+                return results;
+            }
         },
 
-        request: function(options) {
+        request: function (options) {
             var $this = this;
 
             this.form.addClass(this.options.loadingClass);
@@ -1472,7 +1494,7 @@
                     url: this.options.source,
                     type: this.options.method,
                     dataType: 'json',
-                    success: function(data) {
+                    success: function (data) {
                         data = $this.options.onLoadedResults.apply(this, [data]);
                         $this.form.removeClass($this.options.loadingClass);
                         $this.suggest(data);
@@ -1484,7 +1506,7 @@
             }
         },
 
-        pick: function(item) {
+        pick: function (item) {
             var selected = false;
 
             if (typeof item !== "string" && !item.hasClass(this.options.skipClass)) {
@@ -1517,7 +1539,7 @@
             }
         },
 
-        done: function(selected) {
+        done: function (selected) {
 
             if (!selected) {
                 this.form.submit();
@@ -1533,7 +1555,7 @@
             this.hide();
         },
 
-        trigger: function() {
+        trigger: function () {
 
             var $this = this, old = this.value, data = {};
 
@@ -1547,7 +1569,7 @@
 
                 if (this.timer) window.clearTimeout(this.timer);
 
-                this.timer = window.setTimeout(function() {
+                this.timer = window.setTimeout(function () {
                     data[$this.options.param] = $this.value;
                     $this.request({'data': data});
                 }, this.options.delay, this);
@@ -1556,14 +1578,16 @@
             return this;
         },
 
-        suggest: function(data) {
+        suggest: function (data) {
 
             if (!data) return;
 
-            var $this  = this,
+            var $this = this,
                 events = {
-                    'mouseover': function() { $this.pick($(this).parent()); },
-                    'click': function(e) {
+                    'mouseover': function () {
+                        $this.pick($(this).parent());
+                    },
+                    'click': function (e) {
                         e.preventDefault();
                         $this.done($(this).parent());
                     }
@@ -1581,7 +1605,7 @@
 
                 if (data.results && data.results.length > 0) {
 
-                    $(data.results).each(function(i) {
+                    $(data.results).each(function (i) {
 
                         var item = $('<li><a href="#">' + this.title + '</a></li>').data('choice', this);
 
@@ -1607,13 +1631,13 @@
             }
         },
 
-        show: function() {
+        show: function () {
             if (this.visible) return;
             this.visible = true;
             this.form.addClass("uk-open");
         },
 
-        hide: function() {
+        hide: function () {
             if (!this.visible)
                 return;
             this.visible = false;
@@ -1624,7 +1648,7 @@
     UI["search"] = Search;
 
     // init code
-    $(document).on("focus.search.uikit", "[data-uk-search]", function(e) {
+    $(document).on("focus.search.uikit", "[data-uk-search]", function (e) {
         var ele = $(this);
 
         if (!ele.data("search")) {
@@ -1634,24 +1658,24 @@
 
 })(jQuery, jQuery.UIkit);
 
-(function($, UI) {
+(function ($, UI) {
 
     "use strict";
 
-    var $win        = $(window),
+    var $win = $(window),
 
-        ScrollSpy   = function(element, options) {
+        ScrollSpy = function (element, options) {
 
             this.options = $.extend({}, this.options, options);
 
             var $this = this, inviewstate, initinview,
-                fn = function(){
+                fn = function () {
 
                     var inview = isInView($this);
 
-                    if(inview && !inviewstate) {
+                    if (inview && !inviewstate) {
 
-                        if(!initinview) {
+                        if (!initinview) {
                             $this.element.addClass($this.options.initcls);
                             $this.offset = $this.element.offset();
                             initinview = true;
@@ -1707,16 +1731,16 @@
 
         if (top + $element.height() >= window_top && top - options.topoffset <= window_top + $win.height() &&
             left + $element.width() >= window_left && left - options.leftoffset <= window_left + $win.width()) {
-          return true;
+            return true;
         } else {
-          return false;
+            return false;
         }
     }
 
 
     // init code
-    $(function() {
-        $("[data-uk-scrollspy]").each(function() {
+    $(function () {
+        $("[data-uk-scrollspy]").each(function () {
 
             var element = $(this);
 
@@ -1728,11 +1752,11 @@
 
 })(jQuery, jQuery.UIkit);
 
-(function($, UI) {
+(function ($, UI) {
 
     "use strict";
 
-    var SmoothScroll = function(element, options) {
+    var SmoothScroll = function (element, options) {
 
         var $this = this;
 
@@ -1741,10 +1765,10 @@
             transition: 'easeOutExpo'
         }, options);
 
-        this.element = $(element).on("click", function(e) {
+        this.element = $(element).on("click", function (e) {
 
             // get / set parameters
-            var target    = ($(this.hash).length ? $(this.hash) : $("body")).offset().top,
+            var target = ($(this.hash).length ? $(this.hash) : $("body")).offset().top,
                 docheight = $(document).height(),
                 winheight = $(window).height();
 
@@ -1764,12 +1788,14 @@
 
 
     if (!$.easing['easeOutExpo']) {
-        $.easing['easeOutExpo'] = function(x, t, b, c, d) { return (t == d) ? b + c : c * (-Math.pow(2, -10 * t / d) + 1) + b; };
+        $.easing['easeOutExpo'] = function (x, t, b, c, d) {
+            return (t == d) ? b + c : c * (-Math.pow(2, -10 * t / d) + 1) + b;
+        };
     }
 
 
     // init code
-    $(document).on("click.smooth-scroll.uikit", "[data-uk-smooth-scroll]", function(e) {
+    $(document).on("click.smooth-scroll.uikit", "[data-uk-smooth-scroll]", function (e) {
         var ele = $(this);
 
         if (!ele.data("smooth-scroll")) {
