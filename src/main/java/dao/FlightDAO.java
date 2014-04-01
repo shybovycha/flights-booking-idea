@@ -6,6 +6,9 @@ import java.util.List;
 
 import entities.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+
 public class FlightDAO extends BaseDAO {
     public static void destroyAll() {
         destroyAll(Flight.class);
@@ -25,7 +28,7 @@ public class FlightDAO extends BaseDAO {
     }
 
     public static List<Flight> find(String destination, Date date) {
-        String dateStr = new SimpleDateFormat("dd-MM-yyyy").format(date);
+        String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(date);
         String query = String.format("SELECT f FROM Flight f WHERE f.destination LIKE '%%%s%%' AND f.date = '%s'",
                 destination, dateStr);
 
@@ -33,11 +36,24 @@ public class FlightDAO extends BaseDAO {
     }
 
     public static List<Flight> find(String destination, Date dateFrom, Date dateTo) {
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        String dateFromStr = df.format(dateFrom);
-        String dateToStr = df.format(dateTo);
-        String query = String.format("SELECT f FROM Flight f WHERE f.destination LIKE '%%%s%%' AND f.date BETWEEN '%s' AND '%s'",
-                destination, dateFromStr, dateToStr);
+        EntityManager entityManager = getEntityManager();
+        TypedQuery<Flight> q = entityManager.createQuery("SELECT f FROM Flight f WHERE f.destination LIKE :destination AND (f.date BETWEEN :dateFrom AND :dateTo)", Flight.class);
+        q.setParameter("destination", String.format("%%%s%%", destination));
+        q.setParameter("dateFrom", dateFrom);
+        q.setParameter("dateTo", dateTo);
+        List<Flight> entities = null;
+
+        try {
+            entities = q.getResultList();
+        } finally {
+            entityManager.close();
+        }
+
+        return entities;
+    }
+
+    public static List<Flight> find(String destination) {
+        String query = String.format("SELECT f FROM Flight f WHERE f.destination LIKE '%%%s%%'", destination);
 
         return query(Flight.class, query);
     }

@@ -7,6 +7,9 @@ import java.util.List;
 import javax.persistence.*;
 
 import entities.AbstractEntity;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 public class BaseDAO {
     protected static final String UNIT_NAME = "flights";
@@ -22,12 +25,15 @@ public class BaseDAO {
     }
 
     public static Date str2date(String date) {
-        Date dt = null;
+        /*Date dt = null;
 
         try {
             dt = new Date(new SimpleDateFormat("dd/MM/yyyy").parse(date).getTime());
         } catch (Exception e) {
-        }
+        }*/
+
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yyyy");
+        Date dt = new Date(fmt.parseDateTime(date).toDate().getTime());
 
         return dt;
     }

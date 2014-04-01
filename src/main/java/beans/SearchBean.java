@@ -16,6 +16,7 @@ import java.util.Vector;
 public class SearchBean {
     private String date;
     private String destination;
+    private Vector<Flight> flights;
 
     public SearchBean() {
     }
@@ -37,22 +38,19 @@ public class SearchBean {
     }
 
     public Vector<Flight> getFlights() {
-        /*DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yyyy");
-
-        Flight[] flights = new Flight[] {
-            new Flight("here", this.getDestination(),
-                    new java.sql.Date(fmt.parseDateTime(this.getDate()).toDate().getTime()),
-                    (float) 14.99)
-        };*/
-
-        String now = DateTime.now().toString("dd/MM/yyyy");
-
-        Vector<Flight> flights = (Vector<Flight>) FlightManager.findFlights(destination, now, date);
-
         return flights;
     }
 
+    public void setFlights(Vector<Flight> value) {
+        this.flights = value;
+    }
+
     public String perform() {
+        String now = DateTime.now().toString("dd/MM/yyyy");
+
+        //this.flights = (Vector<Flight>) FlightManager.findFlights(destination, now, date);
+        this.flights = (Vector<Flight>) FlightManager.all();
+
         return "search_results";
     }
 }

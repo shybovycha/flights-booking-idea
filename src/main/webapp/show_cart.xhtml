@@ -4,39 +4,17 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
->
+        >
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Booking Test Project</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 
 <body>
 <ui:composition template="templates/user_layout.xhtml">
     <ui:define name="content">
         <div class="ui fluid raised form segment">
-            <h:form>
-                <div class="field">
-                    <div class="ui icon input">
-                        <i class="location icon"/>
-                        <h:inputText value="#{ search.destination }" p:placeholder="Travelling to"/>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <div class="ui icon input">
-                        <i class="calendar icon"/>
-                        <h:inputText value="#{ search.date }" styleClass="datepicker" p:placeholder="Travelling at"/>
-                    </div>
-                </div>
-
-                <h:commandButton styleClass="ui blue submit button" action="#{ search.perform }" value="Find"/>
-            </h:form>
-        </div>
-
-        <div class="ui fluid raised form segment">
-            <h3>Flights to: #{ search.destination } on #{ search.date }</h3>
-
-            <h:dataTable value="#{ search.flights }" var="f" styleClass="ui table segment">
+            <h:dataTable value="#{ cart.flights }" var="f" styleClass="ui table segment">
                 <h:column>
                     <f:facet name="header">From</f:facet>
                     #{ f.departure }
@@ -58,14 +36,26 @@
                 </h:column>
 
                 <h:column>
+                    <f:facet name="header">Amount</f:facet>
+                    #{ cart.getTickets(f) }
+                </h:column>
+
+                <h:column>
                     <f:facet name="header">Actions</f:facet>
 
                     <h:form>
-                        <h:commandButton action="#{ cart.bookTickets(f.id) }" styleClass="ui tiny blue button edit-user"
-                                         value="Add to cart" />
+                        <h:commandButton action="#{ cart.editTickets(f) }" styleClass="ui tiny green button edit-user"
+                                         value="Edit" />
+
+                        <h:commandButton action="#{ cart.removeTickets(f) }" styleClass="ui tiny red button edit-user"
+                                         value="Remove" />
                     </h:form>
                 </h:column>
             </h:dataTable>
+
+            <h:form>
+                <h:commandButton styleClass="ui orange submit button" action="#{ cart.checkoutOverview }" value="Checkout"/>
+            </h:form>
         </div>
     </ui:define>
 </ui:composition>

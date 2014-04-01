@@ -1,5 +1,6 @@
 package beans;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Vector;
@@ -7,7 +8,9 @@ import java.util.Vector;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.swing.text.DateFormatter;
 
+import dao.FlightDAO;
 import managers.FlightManager;
 
 import managers.TicketManager;
@@ -17,7 +20,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import entities.Flight;
 
-@ManagedBean(name="bookingOfficeAdministrator", eager=true)
+@ManagedBean(name="administrator", eager=true)
 @SessionScoped
 public class BookingOfficeAdministratorBean {
     private String destination;
@@ -25,12 +28,21 @@ public class BookingOfficeAdministratorBean {
     private String date;
     private float ticketCost;
     private int ticketsToAdd;
+    private Flight flight;
 
     public BookingOfficeAdministratorBean() {
     }
 
     public int getTicketsToAdd() {
         return ticketsToAdd;
+    }
+
+    public Flight getFlight() {
+        return flight;
+    }
+
+    public void setFlight(Flight flight) {
+        this.flight = flight;
     }
 
     public void setTicketsToAdd(int ticketsToAdd) {
@@ -70,18 +82,41 @@ public class BookingOfficeAdministratorBean {
     }
 
     public String editFlight(int flightId) {
-        return "booking_office_administrator.xhtml";
+        this.flight = FlightDAO.find(flightId);
+        this.departure = this.flight.getDeparture();
+        this.destination = this.flight.getDestination();
+        this.date = new DateTime(this.flight.getDate()).toString("dd/MM/yyyy");
+        this.ticketCost = this.flight.getTicketCost();
+        this.ticketsToAdd = 0;
+
+        return "edit_flight";
     }
 
-    public String updateFlight(int flightId) {
-        return "booking_office_administrator.xhtml";
+    public String removeFlight(int flightId) {
+        FlightDAO.destroy(flightId);
+        return "booking_office_administrator";
+    }
+
+    public String updateFlight() {
+        DateTimeFormatter df = DateTimeFormat.forPattern("dd/MM/yyyy");
+
+        this.flight.setDate(new Date(df.parseDateTime(this.getDate()).toDate().getTime()));
+        this.flight.setDeparture(this.getDeparture());
+        this.flight.setDestination(this.getDestination());
+        this.flight.setTicketCost(this.getTicketCost());
+
+        if (this.ticketsToAdd > 0) {
+            TicketManager.addFreeTickets(this.flight, this.ticketsToAdd);
+        }
+
+        return "booking_office_administrator";
     }
 
     public String createFlight() {
         Flight f = FlightManager.create(departure, destination, date, ticketCost);
         TicketManager.addFreeTickets(f, ticketsToAdd);
 
-        return "booking_office_administrator.xhtml";
+        return "booking_office_administrator";
     }
 
     public Vector<Flight> getFlights() {

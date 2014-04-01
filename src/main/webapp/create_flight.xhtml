@@ -18,39 +18,39 @@
                     <div class="field">
                         <div class="ui icon input">
                             <i class="location icon"/>
-                            <h:inputText value="#{ bookingOfficeAdministrator.departure }" p:placeholder="From" />
+                            <h:inputText value="#{ administrator.departure }" p:placeholder="From" />
                         </div>
                     </div>
 
                     <div class="field">
                         <div class="ui icon input">
                             <i class="flag icon"/>
-                            <h:inputText value="#{ bookingOfficeAdministrator.destination }" p:placeholder="To" />
+                            <h:inputText value="#{ administrator.destination }" p:placeholder="To" />
                         </div>
                     </div>
 
                     <div class="field">
                         <div class="ui icon input">
                             <i class="calendar icon"/>
-                            <h:inputText styleClass="datepicker" value="#{ bookingOfficeAdministrator.date }" p:placeholder="At" />
+                            <h:inputText styleClass="datepicker" value="#{ administrator.date }" p:placeholder="At" />
                         </div>
                     </div>
 
                     <div class="field">
                         <div class="ui icon input">
                             <i class="money icon"/>
-                            <h:inputText value="#{ bookingOfficeAdministrator.ticketCost }" p:placeholder="Single ticket price" />
+                            <h:inputText value="#{ administrator.ticketCost }" p:placeholder="Single ticket price" />
                         </div>
                     </div>
 
                     <div class="field">
                         <div class="ui icon input">
                             <i class="tags icon"/>
-                            <h:inputText value="#{ bookingOfficeAdministrator.ticketsToAdd }" p:placeholder="Add free tickets" />
+                            <h:inputText value="#{ administrator.ticketsToAdd }" p:placeholder="Add free tickets" />
                         </div>
                     </div>
 
-                    <h:commandButton action="#{ bookingOfficeAdministrator.createFlight }" styleClass="ui tiny green button edit-user" value="Create">
+                    <h:commandButton action="#{ administrator.createFlight }" styleClass="ui tiny green button edit-user" value="Create">
                     </h:commandButton>
                 </h:form>
             </ui:define>
