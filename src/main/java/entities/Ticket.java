@@ -30,7 +30,7 @@ public class Ticket extends AbstractEntity {
     }
 
     public boolean isBooked() {
-        return this.status.equals("BOOKED");
+        return this.status.equals("ORDERED");
     }
 
     public boolean isAvailable() {
@@ -49,7 +49,7 @@ public class Ticket extends AbstractEntity {
     public void makeBooked(Owner owner) {
         this.owner = owner;
         this.owner.setOwnerFrom(new Date(Calendar.getInstance().getTimeInMillis()));
-        this.status = "BOOKED";
+        this.status = "ORDERED";
     }
 
     public DateTime bookedAt() {
