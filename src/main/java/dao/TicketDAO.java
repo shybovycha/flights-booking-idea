@@ -1,9 +1,12 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -76,17 +79,21 @@ public class TicketDAO extends BaseDAO {
     }
 
     public static List<SoldReportRow> soldReportByDate(String from, String to) {
+        DateTimeFormatter dfTxt = DateTimeFormat.forPattern("dd/MM/yyyy");
+
         String query = String.format(
-            "SELECT NEW bionic_e9.coursework.entities.SoldReportLine(date, SUM(cost), COUNT(id)) FROM (" +
-                "SELECT t.id, t.owner.ownerFrom AS date, f.ticketCost AS cost FROM Ticket t JOIN t.flight f" +
-                "WHERE t.status = 'SOLD' AND t.owner IS NOT NULL AND t.owner.ownerFrom BETWEEN %s and %s" +
-                "GROUP BY date" +
-            ")",
-            from, to);
+                "SELECT NEW entities.SoldReportRow(f.date, f.departure, f.destination, COUNT(t.id), SUM(f.ticketCost)) FROM " +
+                "Ticket t JOIN t.flight f " +
+                "WHERE t.status = 'SOLD' AND t.owner IS NOT NULL AND (f.date BETWEEN %d and %d) " +
+                "GROUP BY f.id",
+                dfTxt.parseDateTime(from).getMillis(),
+                dfTxt.parseDateTime(to).getMillis()
+        );
 
         return TicketDAO.query(SoldReportRow.class, query);
     }
 
+    /* TODO */
     public static List<SoldReportRow> soldReportByDestination(String from, String to) {
         String query = String.format(
             "SELECT " +

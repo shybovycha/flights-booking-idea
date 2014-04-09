@@ -54,7 +54,7 @@ public class LoginBean {
             } else if (user.isBookingAdministrator()) {
                 return "booking_office_administrator";
             } else if (user.isBusinessAnalytic()) {
-                return "business_analytic";
+                return "report";
             }
         }
 

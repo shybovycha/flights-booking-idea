@@ -48,8 +48,8 @@ public class SearchBean {
     public String perform() {
         String now = DateTime.now().toString("dd/MM/yyyy");
 
-        //this.flights = (Vector<Flight>) FlightManager.findFlights(destination, now, date);
-        this.flights = (Vector<Flight>) FlightManager.all();
+        this.flights = (Vector<Flight>) FlightManager.findFlights(destination, now, date);
+        // this.flights = (Vector<Flight>) FlightManager.all();
 
         return "search_results";
     }

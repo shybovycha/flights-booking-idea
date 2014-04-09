@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import entities.*;
+import org.joda.time.DateTime;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -36,20 +37,14 @@ public class FlightDAO extends BaseDAO {
     }
 
     public static List<Flight> find(String destination, Date dateFrom, Date dateTo) {
-        EntityManager entityManager = getEntityManager();
-        TypedQuery<Flight> q = entityManager.createQuery("SELECT f FROM Flight f WHERE f.destination LIKE :destination AND (f.date BETWEEN :dateFrom AND :dateTo)", Flight.class);
-        q.setParameter("destination", String.format("%%%s%%", destination));
-        q.setParameter("dateFrom", dateFrom);
-        q.setParameter("dateTo", dateTo);
-        List<Flight> entities = null;
+        String query = String.format(
+                "SELECT f FROM Flight f WHERE f.destination LIKE '%%%s%%' AND (f.date BETWEEN %d AND %d)",
+                destination,
+                new DateTime(dateFrom).getMillis(),
+                new DateTime(dateTo).getMillis()
+        );
 
-        try {
-            entities = q.getResultList();
-        } finally {
-            entityManager.close();
-        }
-
-        return entities;
+        return query(Flight.class, query);
     }
 
     public static List<Flight> find(String destination) {

@@ -3,6 +3,7 @@
       xmlns:c="http://java.sun.com/jsp/jstl/core"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
         >
 <head>
     <title>Booking Test Project</title>
@@ -11,36 +12,68 @@
 <body>
 <ui:composition template="templates/user_layout.xhtml">
     <ui:define name="content">
+        <c:if test="#{ report.canRender }">
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $('#chart-container').highcharts({
+                        chart: {
+                            type: 'area'
+                        },
+                        title: {
+                            text: 'Tickets sold'
+                        },
+                        xAxis: {
+                            type: 'category'
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Ticket count'
+                            }
+                        },
+                        plotOptions: {
+                            area: {
+                                marker: {
+                                    enabled: false,
+                                    symbol: 'circle',
+                                    radius: 2,
+                                    states: {
+                                        hover: {
+                                            enabled: true
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        series: #{ report.chartData }
+                    });
+                });
+            </script>
+        </c:if>
+
         <div class="ui fluid raised form segment">
             <h3>Tickets ordered report</h3>
 
-            <h:dataTable value="#{ report.tickets }" var="t"
-                         styleClass="flights-table"
-                         headerClass="flights-table-header"
-                         rowClasses="flights-table-odd-row,flights-table-even-row"
-                    >
-                <h:column>
-                    <f:facet name="header">Owner</f:facet>
-                    #{ t.owner.name }
-                </h:column>
+            <h:form>
+                <div class="two fields">
+                    <div class="field">
+                        <div class="ui icon input">
+                            <i class="calendar icon"/>
+                            <h:inputText value="#{ report.startDate }" styleClass="datepicker" p:placeholder="From..."/>
+                        </div>
+                    </div>
 
-                <h:column>
-                    <f:facet name="header">Ordered at</f:facet>
-                    #{ t.owner.ownerFrom }
-                </h:column>
+                    <div class="field">
+                        <div class="ui icon input">
+                            <i class="calendar icon"/>
+                            <h:inputText value="#{ report.endDate }" styleClass="datepicker" p:placeholder="To..."/>
+                        </div>
+                    </div>
+                </div>
 
-                <h:column>
-                    <f:facet name="header">At</f:facet>
-                    #{ t.flight.date }
-                </h:column>
+                <h:commandButton action="#{ report.update }" styleClass="ui left aligned blue button" value="View" />
+            </h:form>
 
-                <h:column>
-                    <f:facet name="header">Price</f:facet>
-                    #{ t.flight.ticketCost }
-                </h:column>
-            </h:dataTable>
-
-            <a href="#" class="ui left aligned blue button"><i class="legal icon"/>Mark these as sold</a>
+            <div id="chart-container" style="height: 400px; min-width: 310px; max-width: 600px; margin: 0 auto"></div>
         </div>
     </ui:define>
 </ui:composition>
