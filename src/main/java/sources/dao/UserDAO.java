@@ -1,32 +1,45 @@
-package dao;
+package sources.dao;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import entities.*;
+import sources.entities.*;
+import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+@Repository
 public class UserDAO extends BaseDAO {
-    public static User find(int id) {
+    @PersistenceContext
+    private EntityManager em;
+
+    @Override
+    public EntityManager getEntityManager() {
+        return em;
+    }
+
+    public User find(int id) {
         return find(User.class, id);
     }
 
-    public static void destroyAll() {
+    public void destroyAll() {
         destroyAll(Ticket.class);
     }
 
-    public static List<User> all() {
+    public List<User> all() {
         String query = "SELECT u FROM User u";
         Vector<User> users = (Vector<User>) query(User.class, query);
 
         return users;
     }
 
-    public static void destroy(int id) {
+    public void destroy(int id) {
         destroy(User.class, id);
     }
 
-    public static User find(String username) {
+    public User find(String username) {
         String query = String.format("SELECT u FROM User u WHERE u.username = '%s'",
                 username);
 
@@ -39,7 +52,7 @@ public class UserDAO extends BaseDAO {
         }
     }
 
-    public static User find(String username, String password) {
+    public User find(String username, String password) {
         String query = String.format("SELECT u FROM User u WHERE u.username = '%s' AND u.password = '%s'",
                 username, password);
 

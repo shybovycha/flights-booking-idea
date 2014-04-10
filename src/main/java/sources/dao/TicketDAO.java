@@ -1,88 +1,95 @@
-package dao;
+package sources.dao;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.TypedQuery;
+import javax.persistence.PersistenceContext;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import entities.*;
+import sources.entities.*;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class TicketDAO extends BaseDAO {
-    public static Ticket find(int id) {
+    @PersistenceContext
+    private EntityManager em;
+
+    @Override
+    public EntityManager getEntityManager() {
+        return em;
+    }
+
+    public Ticket find(int id) {
         return find(Ticket.class, id);
     }
 
-    public static void destroyAll() {
+    public void destroyAll() {
         destroyAll(Ticket.class);
     }
 
-    public static List<Ticket> all() {
+    public List<Ticket> all() {
         return all(Ticket.class);
     }
 
-    public static Owner createOwner(String name, String phone, String address, String email) {
+    public Owner createOwner(String name, String phone, String address, String email) {
         return new Owner(name, phone, address, email);
     }
 
-    public static List<Ticket> outdated() {
+    public List<Ticket> outdated() {
         DateTimeFormatter df = DateTimeFormat.forPattern("dd/MM/yyyy");
 
         String query = String.format("SELECT t FROM Ticket t WHERE t.owner.ownerFrom < %s AND t.status = 'BOOKED'",
                 DateTime.now().minusDays(3).toString(df));
 
-        return TicketDAO.query(Ticket.class, query);
+        return query(Ticket.class, query);
     }
 
-    public static List<Ticket> ordered() {
+    public List<Ticket> ordered() {
         String query = "SELECT t FROM Ticket t WHERE t.status = 'ORDERED' AND t.owner IS NOT NULL";
 
-        return TicketDAO.query(Ticket.class, query);
+        return query(Ticket.class, query);
     }
 
-    public static List<Ticket> ordered(int flightId) {
+    public List<Ticket> ordered(int flightId) {
         String query = String.format(
                 "SELECT t FROM Ticket t JOIN Flight f WHERE t.status = 'ORDERED' AND t.owner IS NOT NULL AND f.id = %d",
                 flightId);
 
-        return TicketDAO.query(Ticket.class, query);
+        return query(Ticket.class, query);
     }
 
-    public static List<Ticket> free() {
+    public List<Ticket> free() {
         String query = "SELECT t FROM Ticket t WHERE t.status = 'ORDERED' AND t.owner IS NULL";
 
-        return TicketDAO.query(Ticket.class, query);
+        return query(Ticket.class, query);
     }
 
-    public static List<Ticket> free(int flightId) {
+    public List<Ticket> free(int flightId) {
         String query = String.format(
                 "SELECT t FROM Ticket t JOIN t.flight f WHERE t.status = 'AVAILABLE' AND t.owner IS NULL AND f.id = %d",
                 flightId);
 
-        return TicketDAO.query(Ticket.class, query);
+        return query(Ticket.class, query);
     }
 
-    public static List<Ticket> free(Flight flight) {
+    public List<Ticket> free(Flight flight) {
         return free(flight.getId());
     }
 
-    public static List<Ticket> sold() {
+    public List<Ticket> sold() {
         String query = "SELECT t FROM Ticket t WHERE t.status = 'SOLD' AND t.owner IS NOT NULL";
 
-        return TicketDAO.query(Ticket.class, query);
+        return query(Ticket.class, query);
     }
 
-    public static List<SoldReportRow> soldReportByDate(String from, String to) {
+    public List<SoldReportRow> soldReportByDate(String from, String to) {
         DateTimeFormatter dfTxt = DateTimeFormat.forPattern("dd/MM/yyyy");
 
         String query = String.format(
-                "SELECT NEW entities.SoldReportRow(f.date, f.departure, f.destination, COUNT(t.id), SUM(f.ticketCost)) FROM " +
+                "SELECT NEW sources.entities.SoldReportRow(f.date, f.departure, f.destination, COUNT(t.id), SUM(f.ticketCost)) FROM " +
                 "Ticket t JOIN t.flight f " +
                 "WHERE t.status = 'SOLD' AND t.owner IS NOT NULL AND (f.date BETWEEN %d and %d) " +
                 "GROUP BY f.id",
@@ -90,11 +97,11 @@ public class TicketDAO extends BaseDAO {
                 dfTxt.parseDateTime(to).getMillis()
         );
 
-        return TicketDAO.query(SoldReportRow.class, query);
+        return query(SoldReportRow.class, query);
     }
 
     /* TODO */
-    public static List<SoldReportRow> soldReportByDestination(String from, String to) {
+    public List<SoldReportRow> soldReportByDestination(String from, String to) {
         String query = String.format(
             "SELECT " +
                 "NEW bionic_e9.coursework.entities.SoldReportLine(date, destination, SUM(cost), COUNT(id)) " +
@@ -106,6 +113,6 @@ public class TicketDAO extends BaseDAO {
             ")",
             from, to);
 
-        return TicketDAO.query(SoldReportRow.class, query);
+        return query(SoldReportRow.class, query);
     }
 }

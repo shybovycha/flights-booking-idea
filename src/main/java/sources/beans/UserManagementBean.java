@@ -1,30 +1,31 @@
-package beans;
+package sources.beans;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Vector;
 
-import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-import managers.FlightManager;
-import managers.UserManager;
+import org.springframework.context.annotation.Scope;
+import sources.managers.FlightManager;
+import sources.managers.UserManager;
 
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import sources.entities.Flight;
+import sources.entities.User;
+import org.springframework.stereotype.Component;
 
-import entities.Flight;
-import entities.User;
-
-@ManagedBean(name="root", eager=true)
-@SessionScoped
+@Named("root")
+@Scope("session")
 public class UserManagementBean {
     private String userId;
     private String username;
     private String password;
     private String role;
+
+    @Inject
+    private UserManager userManager;
 
     public UserManagementBean() {
     }
@@ -68,13 +69,13 @@ public class UserManagementBean {
     }
 
     public String removeUser(int id) {
-        UserManager.destroy(id);
+        userManager.destroy(id);
 
         return "root";
     }
 
     public void loadUser(int id) {
-        User u = UserManager.find(id);
+        User u = userManager.find(id);
 
         this.username = u.getUsername();
         this.password = u.getPassword();
@@ -82,11 +83,12 @@ public class UserManagementBean {
     }
 
     public void updateUser(int id) {
-        UserManager.update(id, username, password, role);
+        userManager.update(id, username, password, role);
     }
 
-    public void createUser() {
-        UserManager.create(username, password, role);
+    public String createUser() {
+        userManager.create(username, password, role);
+        return "root";
     }
 
     public HashMap<String, String> getUserRoles() {
@@ -101,7 +103,7 @@ public class UserManagementBean {
     }
 
     public Vector<User> getUsers() {
-        Vector<User> users = (Vector<User>) UserManager.all();
+        Vector<User> users = (Vector<User>) userManager.all();
 
         return users;
     }

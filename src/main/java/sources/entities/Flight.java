@@ -1,4 +1,4 @@
-package entities;
+package sources.entities;
 
 import javax.persistence.*;
 
@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name="flights")
-public class Flight extends AbstractEntity {
+public class Flight {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;

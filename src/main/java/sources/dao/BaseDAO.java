@@ -1,28 +1,18 @@
-package dao;
+package sources.dao;
 
 import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.persistence.*;
 
-import entities.AbstractEntity;
-import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-public class BaseDAO {
-    protected static final String UNIT_NAME = "flights";
-    protected static EntityManagerFactory factory;
-    protected static EntityManager em;
-
-    static {
-        factory = Persistence.createEntityManagerFactory(UNIT_NAME);
-    }
-
-    public static EntityManager getEntityManager() {
-        return factory.createEntityManager();
-    }
+@Repository
+public abstract class BaseDAO {
+    public abstract EntityManager getEntityManager();
 
     public static Date str2date(String date) {
         /*Date dt = null;
@@ -38,7 +28,7 @@ public class BaseDAO {
         return dt;
     }
 
-    public static <T> T find(Class<T> entityClass, int id) {
+    public <T> T find(Class<T> entityClass, int id) {
         Object entity = null;
         EntityManager entityManager = getEntityManager();
 
@@ -51,25 +41,18 @@ public class BaseDAO {
         return entityClass.cast(entity);
     }
 
-    public static <T extends AbstractEntity> T save(T entity) {
+    @Transactional
+    public <T> T save(T entity) {
         EntityManager entityManager = getEntityManager();
-        EntityTransaction tx = entityManager.getTransaction();
 
-        tx.begin();
+        entityManager.persist(entity);
 
-        if (entity.getId() < 1) {
-            entityManager.persist(entity);
-        } else {
-            entity = entityManager.merge(entity);
-        }
-
-        entityManager.flush();
-        tx.commit();
+        // entityManager.flush();
 
         return entity;
     }
 
-    public static <T> List<T> query(Class<T> entityClass, String query) {
+    public <T> List<T> query(Class<T> entityClass, String query) {
         EntityManager entityManager = getEntityManager();
         TypedQuery<T> q = entityManager.createQuery(query, entityClass);
         List<T> entities = null;
@@ -83,19 +66,20 @@ public class BaseDAO {
         return entities;
     }
 
-    public static <T> int updateQuery(String query) {
+    @Transactional
+    public <T> int updateQuery(String query) {
         EntityManager entityManager = getEntityManager();
-        EntityTransaction tx = entityManager.getTransaction();
+        //EntityTransaction tx = entityManager.getTransaction();
         int results = 0;
 
-        tx.begin();
+        //tx.begin();
         results = entityManager.createQuery(query).executeUpdate();
-        tx.commit();
+        //tx.commit();
 
         return results;
     }
 
-    public static <T> List<T> all(Class<T> entityClass) {
+    public <T> List<T> all(Class<T> entityClass) {
         EntityManager entityManager = getEntityManager();
         String query = String.format("SELECT e FROM %s e", entityClass.getSimpleName());
         TypedQuery<T> q = entityManager.createQuery(query, entityClass);
@@ -110,31 +94,33 @@ public class BaseDAO {
         return entities;
     }
 
-    public static <T> void destroy(Class<T> entityClass, int id) {
+    @Transactional
+    public <T> void destroy(Class<T> entityClass, int id) {
         EntityManager entityManager = getEntityManager();
         T entity = entityManager.find(entityClass, id);
-        EntityTransaction tx = entityManager.getTransaction();
+        //EntityTransaction tx = entityManager.getTransaction();
 
-        tx.begin();
+        //tx.begin();
         entityManager.remove(entity);
-        tx.commit();
+        //tx.commit();
     }
 
-    public static <T> void destroy(Class<T> entityClass, T entity) {
+    @Transactional
+    public <T> void destroy(Class<T> entityClass, T entity) {
         EntityManager entityManager = getEntityManager();
-        EntityTransaction tx = entityManager.getTransaction();
+        //EntityTransaction tx = entityManager.getTransaction();
 
-        tx.begin();
+        //tx.begin();
 
         if (!entityManager.contains(entity)) {
             entity = entityManager.merge(entity);
         }
 
         entityManager.remove(entity);
-        tx.commit();
+        //tx.commit();
     }
 
-    public static <T> void destroyAll(Class<T> entityClass) {
+    public <T> void destroyAll(Class<T> entityClass) {
         List<T> entities = all(entityClass);
 
         for (T entity : entities) {

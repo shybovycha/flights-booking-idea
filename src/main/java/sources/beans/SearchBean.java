@@ -1,22 +1,26 @@
-package beans;
+package sources.beans;
+
+import org.joda.time.DateTime;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import sources.entities.Flight;
+import sources.managers.FlightManager;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-
-import managers.FlightManager;
-import org.joda.time.DateTime;
-import org.joda.time.format.*;
-
-import entities.Flight;
-
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.Vector;
 
-@ManagedBean(name="search", eager=true)
-@SessionScoped
+@Named("search")
+@Scope("session")
 public class SearchBean {
     private String date;
     private String destination;
     private Vector<Flight> flights;
+
+    @Inject
+    private FlightManager flightManager;
 
     public SearchBean() {
     }
@@ -48,7 +52,7 @@ public class SearchBean {
     public String perform() {
         String now = DateTime.now().toString("dd/MM/yyyy");
 
-        this.flights = (Vector<Flight>) FlightManager.findFlights(destination, now, date);
+        this.flights = (Vector<Flight>) flightManager.findFlights(destination, now, date);
         // this.flights = (Vector<Flight>) FlightManager.all();
 
         return "search_results";

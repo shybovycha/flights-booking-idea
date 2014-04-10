@@ -1,26 +1,32 @@
-package beans;
+package sources.beans;
 
-import dao.FlightDAO;
-import entities.SoldReportRow;
+import org.springframework.context.annotation.Scope;
+import sources.dao.FlightDAO;
+import sources.entities.SoldReportRow;
 import org.apache.commons.lang3.StringUtils;
-import dao.TicketDAO;
-import entities.Flight;
-import entities.Ticket;
-import managers.FlightManager;
-import managers.TicketManager;
-import org.joda.time.DateTime;
+import sources.dao.TicketDAO;
+import sources.entities.Flight;
+import sources.entities.Ticket;
+import sources.managers.FlightManager;
+import sources.managers.TicketManager;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.springframework.stereotype.Component;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.*;
 
-@ManagedBean(name="report", eager=true)
-@SessionScoped
+@Named("report")
+@Scope("session")
 public class BusinessAnalyticBean {
     private String startDate;
     private String endDate;
+
+    @Inject
+    protected TicketManager ticketManager;
 
     public String getStartDate() {
         return startDate;
@@ -54,7 +60,7 @@ public class BusinessAnalyticBean {
 
         DateTimeFormatter fmt = DateTimeFormat.forPattern("MMMM, yyyy");
 
-        List<SoldReportRow> reportRows = TicketDAO.soldReportByDate(getStartDate(), getEndDate());
+        List<SoldReportRow> reportRows = ticketManager.soldReportByDate(getStartDate(), getEndDate());
 
         for (SoldReportRow row : reportRows) {
             String month = fmt.print(row.getDate());

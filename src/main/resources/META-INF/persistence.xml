@@ -3,13 +3,12 @@
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
                 http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
              version="2.0" xmlns="http://java.sun.com/xml/ns/persistence">
-    <persistence-unit name="flights" transaction-type=
-            "RESOURCE_LOCAL">
+    <persistence-unit name="flights" transaction-type="RESOURCE_LOCAL">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 
-        <class>entities.Flight</class>
-        <class>entities.Ticket</class>
-        <class>entities.User</class>
+        <class>sources.entities.Flight</class>
+        <class>sources.entities.Ticket</class>
+        <class>sources.entities.User</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.sqlite.JDBC"/>

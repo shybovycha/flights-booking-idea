@@ -1,30 +1,33 @@
-package beans;
+package sources.beans;
 
 import java.util.*;
 
-import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-import dao.TicketDAO;
-import managers.TicketManager;
+import org.springframework.context.annotation.Scope;
+import sources.dao.TicketDAO;
+import sources.managers.TicketManager;
 
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import sources.entities.Flight;
+import sources.entities.Ticket;
+import org.springframework.stereotype.Component;
 
-import entities.Flight;
-import entities.Ticket;
-
-@ManagedBean(name="bookingOfficeAccountant", eager=true)
-@SessionScoped
+@Named("bookingOfficeAccountant")
+@Scope("session")
 public class BookingOfficeAccountantBean {
+    @Inject
+    private TicketManager ticketManager;
+
     private Map<Integer, Boolean> selectedTickets = new HashMap<Integer, Boolean>();
 
     public BookingOfficeAccountantBean() {
     }
 
     public Vector<Ticket> getTickets() {
-        Vector<Ticket> tickets = (Vector<Ticket>) TicketManager.orderedTickets();
+        Vector<Ticket> tickets = (Vector<Ticket>) ticketManager.orderedTickets();
 
         return tickets;
     }
@@ -38,14 +41,14 @@ public class BookingOfficeAccountantBean {
     }
 
     public String markAsSold() {
-        Vector<Ticket> tickets = new Vector<Ticket>(); //TicketManager.orderedTickets();
+        Vector<Ticket> tickets = new Vector<Ticket>(); //ticketManager.orderedTickets();
 
         for (Integer id : selectedTickets.keySet()) {
             if (!selectedTickets.get(id)) {
                 continue;
             }
 
-            Ticket t = TicketDAO.find(id);
+            Ticket t = ticketManager.find(id);
 
             if (t == null) {
                 continue;
@@ -54,7 +57,7 @@ public class BookingOfficeAccountantBean {
             tickets.add(t);
         }
 
-        TicketManager.sell(tickets);
+        ticketManager.sell(tickets);
 
         return "booking_office_accountant";
     }

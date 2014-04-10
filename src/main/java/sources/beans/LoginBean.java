@@ -1,20 +1,24 @@
-package beans;
+package sources.beans;
 
-import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-import entities.User;
-import managers.UserManager;
+import org.springframework.context.annotation.Scope;
+import sources.entities.User;
+import sources.managers.UserManager;
+import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-
-@ManagedBean(name="login", eager=true)
-@SessionScoped
+@Named("login")
+@Scope("session")
 public class LoginBean {
     private String username;
     private String password;
     private String message;
+
+    @Inject
+    private UserManager userManager;
 
     public LoginBean() {
     }
@@ -44,7 +48,7 @@ public class LoginBean {
     }
 
     public String perform() {
-        User user = UserManager.authenticate(this.getUsername(), this.getPassword());
+        User user = userManager.authenticate(this.getUsername(), this.getPassword());
 
         if (user != null) {
             if (user.isSuperUser()) {

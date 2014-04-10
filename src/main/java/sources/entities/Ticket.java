@@ -1,4 +1,4 @@
-package entities;
+package sources.entities;
 
 import java.sql.Date;
 import java.util.Calendar;
@@ -10,7 +10,7 @@ import org.joda.time.Days;
 
 @Entity
 @Table(name="tickets")
-public class Ticket extends AbstractEntity {
+public class Ticket {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;

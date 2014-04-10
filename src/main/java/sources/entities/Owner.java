@@ -1,4 +1,7 @@
-package entities;
+package sources.entities;
+
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.sql.Date;
 

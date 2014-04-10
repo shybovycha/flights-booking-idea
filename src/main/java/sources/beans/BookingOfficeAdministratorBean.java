@@ -1,27 +1,27 @@
-package beans;
+package sources.beans;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Vector;
 
-import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.swing.text.DateFormatter;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-import dao.FlightDAO;
-import managers.FlightManager;
+import org.springframework.context.annotation.Scope;
+import sources.dao.FlightDAO;
+import sources.managers.FlightManager;
 
-import managers.TicketManager;
+import sources.managers.TicketManager;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import entities.Flight;
+import sources.entities.Flight;
+import org.springframework.stereotype.Component;
 
-@ManagedBean(name="administrator", eager=true)
-@SessionScoped
+@Named("administrator")
+@Scope("session")
 public class BookingOfficeAdministratorBean {
     private String destination;
     private String departure;
@@ -29,6 +29,12 @@ public class BookingOfficeAdministratorBean {
     private float ticketCost;
     private int ticketsToAdd;
     private Flight flight;
+
+    @Inject
+    private TicketManager ticketManager;
+
+    @Inject
+    private FlightManager flightManager;
 
     public BookingOfficeAdministratorBean() {
     }
@@ -82,7 +88,7 @@ public class BookingOfficeAdministratorBean {
     }
 
     public String editFlight(int flightId) {
-        this.flight = FlightDAO.find(flightId);
+        this.flight = flightManager.find(flightId);
         this.departure = this.flight.getDeparture();
         this.destination = this.flight.getDestination();
         this.date = new DateTime(this.flight.getDate()).toString("dd/MM/yyyy");
@@ -93,7 +99,7 @@ public class BookingOfficeAdministratorBean {
     }
 
     public String removeFlight(int flightId) {
-        FlightDAO.destroy(flightId);
+        flightManager.destroy(flightId);
         return "booking_office_administrator";
     }
 
@@ -106,21 +112,21 @@ public class BookingOfficeAdministratorBean {
         this.flight.setTicketCost(this.getTicketCost());
 
         if (this.ticketsToAdd > 0) {
-            TicketManager.addFreeTickets(this.flight, this.ticketsToAdd);
+            ticketManager.addFreeTickets(this.flight, this.ticketsToAdd);
         }
 
         return "booking_office_administrator";
     }
 
     public String createFlight() {
-        Flight f = FlightManager.create(departure, destination, date, ticketCost);
-        TicketManager.addFreeTickets(f, ticketsToAdd);
+        Flight f = flightManager.create(departure, destination, date, ticketCost);
+        ticketManager.addFreeTickets(f, ticketsToAdd);
 
         return "booking_office_administrator";
     }
 
     public Vector<Flight> getFlights() {
-        Vector<Flight> flights = (Vector<Flight>) FlightManager.all();
+        Vector<Flight> flights = (Vector<Flight>) flightManager.all();
 
         return flights;
     }

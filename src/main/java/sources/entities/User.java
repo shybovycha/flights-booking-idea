@@ -1,10 +1,10 @@
-package entities;
+package sources.entities;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name="users")
-public class User extends AbstractEntity {
+public class User {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;

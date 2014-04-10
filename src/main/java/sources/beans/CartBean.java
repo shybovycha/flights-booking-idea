@@ -1,27 +1,27 @@
-package beans;
+package sources.beans;
 
-import dao.FlightDAO;
-import entities.Flight;
-import entities.Owner;
-import managers.FlightManager;
-import managers.TicketManager;
+import org.springframework.context.annotation.Scope;
+import sources.dao.FlightDAO;
+import sources.entities.Flight;
+import sources.entities.Owner;
+import sources.managers.FlightManager;
+import sources.managers.TicketManager;
 import org.joda.time.DateTime;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import java.util.*;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-import managers.FlightManager;
-import org.joda.time.DateTime;
-import org.joda.time.format.*;
+import sources.managers.FlightManager;
 
-import entities.Ticket;
+import sources.entities.Ticket;
+import org.springframework.stereotype.Component;
 
-@ManagedBean(name="cart", eager=true)
-@SessionScoped
+@Named("cart")
+@Scope("session")
 public class CartBean {
     private int amount;
     private String name;
@@ -30,6 +30,12 @@ public class CartBean {
     private String address;
     private Flight flight;
     private HashMap<Flight, Integer> tickets = new HashMap<Flight, Integer>();
+
+    @Inject
+    private TicketManager ticketManager;
+
+    @Inject
+    private FlightManager flightManager;
 
     public CartBean() {
     }
@@ -108,7 +114,7 @@ public class CartBean {
     }
 
     public String bookTickets(int flightId) {
-        this.flight = FlightDAO.find(flightId);
+        this.flight = flightManager.find(flightId);
         return "book_tickets";
     }
 
@@ -156,7 +162,7 @@ public class CartBean {
         Owner owner = new Owner(this.getName(), this.getPhone(), this.getAddress(), this.getEmail());
 
         for (Map.Entry<Flight, Integer> pair : this.tickets.entrySet()) {
-            TicketManager.bookTickets(pair.getKey(), pair.getValue(), owner);
+            ticketManager.bookTickets(pair.getKey(), pair.getValue(), owner);
         }
 
         return "index";
