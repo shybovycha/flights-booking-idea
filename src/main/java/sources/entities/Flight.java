@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name="flights")
-public class Flight {
+public class Flight extends AbstractEntity {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;

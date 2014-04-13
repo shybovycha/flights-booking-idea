@@ -9,6 +9,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import sources.entities.AbstractEntity;
 
 @Repository
 public abstract class BaseDAO {
@@ -42,12 +43,16 @@ public abstract class BaseDAO {
     }
 
     @Transactional
-    public <T> T save(T entity) {
+    public <T extends AbstractEntity> T save(T entity) {
         EntityManager entityManager = getEntityManager();
 
-        entityManager.persist(entity);
+        if (entity.getId() > 0) {
+            entityManager.merge(entity);
+        } else {
+            entityManager.persist(entity);
+        }
 
-        // entityManager.flush();
+        entityManager.flush();
 
         return entity;
     }
