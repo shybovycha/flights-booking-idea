@@ -52,12 +52,22 @@
                                                  value="Edit">
                                 </h:commandButton>
 
+                                <span class="spacer"></span>
+
                                 <h:commandButton action="#{ administrator.removeFlight(f.id) }" styleClass="ui tiny red button edit-user"
                                                  value="Remove">
                                 </h:commandButton>
                             </h:form>
                         </h:column>
                     </h:dataTable>
+
+                    <c:if test="#{ administrator.hasOutdatedTickets }">
+                        <h:form>
+                            <h:commandButton action="#{ administrator.removeOutdatedTickets }" styleClass="ui green button"
+                                             value="Remove #{ administrator.outdatedTicketsAmount } outdated ticket orders">
+                            </h:commandButton>
+                        </h:form>
+                    </c:if>
                 </div>
             </ui:define>
         </ui:composition>

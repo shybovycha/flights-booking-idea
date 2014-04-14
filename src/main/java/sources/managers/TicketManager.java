@@ -99,13 +99,19 @@ public class TicketManager {
         return bound;
     }
 
-    public int removeOutdatedOrders() {
+    public int removeOutdatedTickets() {
         List<Ticket> tickets = ticketDAO.outdated();
 
         for (Ticket t : tickets) {
             t.makeAvailable();
             ticketDAO.save(t);
         }
+
+        return tickets.size();
+    }
+
+    public int getOutdatedTicketsAmount() {
+        List<Ticket> tickets = ticketDAO.outdated();
 
         return tickets.size();
     }

@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Named("root")
 @Scope("session")
 public class UserManagementBean {
-    private String userId;
+    private int userId;
     private String username;
     private String password;
     private String role;
@@ -30,11 +30,11 @@ public class UserManagementBean {
     public UserManagementBean() {
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
@@ -65,7 +65,7 @@ public class UserManagementBean {
     public String editUser(int id) {
         loadUser(id);
 
-        return "edit_user.xhtml";
+        return "edit_user";
     }
 
     public String removeUser(int id) {
@@ -77,13 +77,14 @@ public class UserManagementBean {
     public void loadUser(int id) {
         User u = userManager.find(id);
 
+        this.userId = id;
         this.username = u.getUsername();
         this.password = u.getPassword();
         this.role = u.getRole();
     }
 
-    public String updateUser(int id) {
-        userManager.update(id, username, password, role, true);
+    public String updateUser() {
+        userManager.update(userId, username, password, role, true);
         return "root";
     }
 

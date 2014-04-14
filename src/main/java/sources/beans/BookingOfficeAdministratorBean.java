@@ -106,10 +106,13 @@ public class BookingOfficeAdministratorBean {
     public String updateFlight() {
         DateTimeFormatter df = DateTimeFormat.forPattern("dd/MM/yyyy");
 
-        this.flight.setDate(new Date(df.parseDateTime(this.getDate()).toDate().getTime()));
-        this.flight.setDeparture(this.getDeparture());
-        this.flight.setDestination(this.getDestination());
-        this.flight.setTicketCost(this.getTicketCost());
+        this.flightManager.update(
+                flight.getId(),
+                departure,
+                destination,
+                new Date(df.parseDateTime(this.getDate()).toDate().getTime()),
+                ticketCost
+        );
 
         if (this.ticketsToAdd > 0) {
             ticketManager.addFreeTickets(this.flight, this.ticketsToAdd);
@@ -123,6 +126,20 @@ public class BookingOfficeAdministratorBean {
         ticketManager.addFreeTickets(f, ticketsToAdd);
 
         return "booking_office_administrator";
+    }
+
+    public int getOutdatedTicketsAmount() {
+        return ticketManager.getOutdatedTicketsAmount();
+    }
+
+    public String removeOutdatedTickets() {
+        ticketManager.removeOutdatedTickets();
+
+        return "booking_office_administrator";
+    }
+
+    public boolean getHasOutdatedTickets() {
+        return (ticketManager.getOutdatedTicketsAmount() > 0);
     }
 
     public Vector<Flight> getFlights() {

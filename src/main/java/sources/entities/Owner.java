@@ -14,7 +14,7 @@ public class Owner {
     private String email;
     private String phone;
     private String name;
-    private Date ownerFrom;
+    private Long ownerFrom;
 
     public Owner() {}
 
@@ -58,10 +58,10 @@ public class Owner {
     }
 
     public Date getOwnerFrom() {
-        return this.ownerFrom;
+        return new Date(this.ownerFrom);
     }
 
     public void setOwnerFrom(Date ownerFrom) {
-        this.ownerFrom = ownerFrom;
+        this.ownerFrom = ownerFrom.getTime();
     }
 }

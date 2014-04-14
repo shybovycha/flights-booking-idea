@@ -1,5 +1,6 @@
 package sources.managers;
 
+import java.sql.Date;
 import java.util.List;
 
 import sources.dao.*;
@@ -51,6 +52,15 @@ public class FlightManager {
         f.setDeparture(from);
         f.setDestination(to);
         f.setDate(BaseDAO.str2date(date));
+        f.setTicketCost(ticketCost);
+        return flightDAO.save(f);
+    }
+
+    public Flight update(int id, String from, String to, Date date, float ticketCost) {
+        Flight f = flightDAO.find(id);
+        f.setDeparture(from);
+        f.setDestination(to);
+        f.setDate(date);
         f.setTicketCost(ticketCost);
         return flightDAO.save(f);
     }
