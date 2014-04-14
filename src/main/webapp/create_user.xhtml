@@ -15,7 +15,7 @@
 
         <h:form styleClass="ui form">
             <div class="field">
-                <label>Name</label>
+                <label>Name:</label>
 
                 <div class="ui icon input">
                     <i class="user icon"/>
@@ -24,7 +24,7 @@
             </div>
 
             <div class="field">
-                <label>Password</label>
+                <label>Password:</label>
 
                 <div class="ui icon input">
                     <i class="user icon"/>
@@ -33,14 +33,14 @@
             </div>
 
             <div class="field">
-                <label>Role</label>
+                <label>Role:</label>
+
                 <h:selectOneMenu value="#{ root.role }">
                     <f:selectItems value="#{ root.userRoles }"/>
                 </h:selectOneMenu>
             </div>
 
-            <h:commandButton action="#{ root.createUser }" styleClass="ui tiny green button edit-user" value="Save">
-            </h:commandButton>
+            <h:commandButton action="#{ root.createUser }" styleClass="ui tiny green button edit-user" value="Save" />
         </h:form>
     </ui:define>
 </ui:composition>

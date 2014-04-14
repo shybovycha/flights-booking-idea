@@ -16,6 +16,8 @@
 
                 <h:form styleClass="ui form">
                     <div class="field">
+                        <label>Departure:</label>
+
                         <div class="ui icon input">
                             <i class="location icon"/>
                             <h:inputText value="#{ administrator.departure }" p:placeholder="From" />
@@ -23,6 +25,8 @@
                     </div>
 
                     <div class="field">
+                        <label>Destination:</label>
+
                         <div class="ui icon input">
                             <i class="flag icon"/>
                             <h:inputText value="#{ administrator.destination }" p:placeholder="To" />
@@ -30,6 +34,8 @@
                     </div>
 
                     <div class="field">
+                        <label>Date:</label>
+
                         <div class="ui icon input">
                             <i class="calendar icon"/>
                             <h:inputText styleClass="datepicker" value="#{ administrator.date }" p:placeholder="At" />
@@ -37,6 +43,8 @@
                     </div>
 
                     <div class="field">
+                        <label>Ticket cost:</label>
+
                         <div class="ui icon input">
                             <i class="money icon"/>
                             <h:inputText value="#{ administrator.ticketCost }" p:placeholder="Single ticket price" />
@@ -44,14 +52,15 @@
                     </div>
 
                     <div class="field">
+                        <label>Add free tickets:</label>
+
                         <div class="ui icon input">
                             <i class="tags icon"/>
                             <h:inputText value="#{ administrator.ticketsToAdd }" p:placeholder="Add free tickets" />
                         </div>
                     </div>
 
-                    <h:commandButton action="#{ administrator.createFlight }" styleClass="ui tiny green button edit-user" value="Create">
-                    </h:commandButton>
+                    <h:commandButton action="#{ administrator.createFlight }" styleClass="ui tiny green button edit-user" value="Create" />
                 </h:form>
             </ui:define>
         </ui:composition>

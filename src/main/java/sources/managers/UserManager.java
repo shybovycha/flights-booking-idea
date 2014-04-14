@@ -42,6 +42,19 @@ public class UserManager {
         return user;
     }
 
+    public User update(int id, String username, String password, String role, boolean needPasswordReset) {
+        User user = userDAO.find(id);
+
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setRole(role);
+        user.setNeedPasswordReset(needPasswordReset);
+
+        userDAO.save(user);
+
+        return user;
+    }
+
     public User create(String username, String password, String role) {
         User user = new User(username, password, role);
         userDAO.save(user);

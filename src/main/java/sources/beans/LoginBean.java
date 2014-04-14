@@ -16,6 +16,7 @@ public class LoginBean {
     private String username;
     private String password;
     private String message;
+    private User user;
 
     @Inject
     private UserManager userManager;
@@ -47,10 +48,19 @@ public class LoginBean {
         this.message = value;
     }
 
+    public String updateUserPassword() {
+        userManager.update(user.getId(), user.getUsername(), this.getPassword(), user.getRole(), false);
+        return "index";
+    }
+
     public String perform() {
-        User user = userManager.authenticate(this.getUsername(), this.getPassword());
+        user = userManager.authenticate(this.getUsername(), this.getPassword());
 
         if (user != null) {
+            if (user.needsToChangePassword()) {
+                return "edit_user_password";
+            }
+
             if (user.isSuperUser()) {
                 return "root";
             } else if (user.isAccountant()) {
@@ -62,7 +72,7 @@ public class LoginBean {
             }
         }
 
-        this.setMessage("Could not find such user");
+        this.setMessage("Could not find such user and password combination");
 
         return "login";
     }

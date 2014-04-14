@@ -12,14 +12,28 @@ public class User extends AbstractEntity {
     private String username;
     private String password;
     private String role;
+    private Boolean needPasswordReset;
 
     public User() {
+    }
+
+    public boolean needsToChangePassword() {
+        return needPasswordReset;
+    }
+
+    public Boolean getNeedPasswordReset() {
+        return needPasswordReset;
+    }
+
+    public void setNeedPasswordReset(Boolean needPasswordReset) {
+        this.needPasswordReset = needPasswordReset;
     }
 
     public User(String username, String password, String role) {
         this.username = username;
         this.password = password;
         this.role = role;
+        this.needPasswordReset = true;
     }
 
     public boolean isPlainUser() {

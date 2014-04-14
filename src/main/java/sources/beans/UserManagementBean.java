@@ -82,8 +82,9 @@ public class UserManagementBean {
         this.role = u.getRole();
     }
 
-    public void updateUser(int id) {
-        userManager.update(id, username, password, role);
+    public String updateUser(int id) {
+        userManager.update(id, username, password, role, true);
+        return "root";
     }
 
     public String createUser() {

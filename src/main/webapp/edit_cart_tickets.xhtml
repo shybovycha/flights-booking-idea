@@ -13,9 +13,29 @@
 <body>
 <ui:composition template="templates/user_layout.xhtml">
     <ui:define name="content">
+        <script type="text/javascript">
+            function updateTotal() {
+                var tickets = parseInt($('#ticketAmount').val()),
+                        ticketCost = parseFloat($('#ticketCost').val());
+
+                if (tickets == NaN)
+                    tickets = 0;
+
+                $('#totalCost').val(tickets * ticketCost);
+            }
+
+            $(document).ready(function() {
+                $('#ticketAmount').keyup(updateTotal);
+
+                updateTotal();
+            });
+        </script>
+
         <div class="ui fluid raised form segment">
             <h:form>
                 <div class="field">
+                    <label>Departure:</label>
+
                     <div class="ui icon input">
                         <i class="location icon"/>
                         <h:inputText value="#{ cart.departure }" p:disabled="true" />
@@ -23,6 +43,8 @@
                 </div>
 
                 <div class="field">
+                    <label>Destination:</label>
+
                     <div class="ui icon input">
                         <i class="flag icon"/>
                         <h:inputText value="#{ cart.destination }" p:disabled="true" />
@@ -30,6 +52,8 @@
                 </div>
 
                 <div class="field">
+                    <label>Date:</label>
+
                     <div class="ui icon input">
                         <i class="calendar icon"/>
                         <h:inputText value="#{ cart.date }" p:disabled="true"/>
@@ -37,16 +61,29 @@
                 </div>
 
                 <div class="field">
+                    <label>Ticket cost:</label>
+
                     <div class="ui icon input">
                         <i class="money icon"/>
-                        <h:inputText value="#{ cart.ticketCost }" p:disabled="true"/>
+                        <h:inputText value="#{ cart.ticketCost }" p:disabled="true" p:id="ticketCost" />
                     </div>
                 </div>
 
                 <div class="field">
+                    <label>Total:</label>
+
                     <div class="ui icon input">
                         <i class="tags icon"/>
-                        <h:inputText value="#{ cart.amount }" p:placeholder="Amount"/>
+                        <h:inputText value="0" p:disabled="true" p:id="totalCost" />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Ticket amount:</label>
+
+                    <div class="ui icon input">
+                        <i class="tags icon"/>
+                        <h:inputText value="#{ cart.amount }" p:placeholder="Amount" p:id="ticketAmount" />
                     </div>
                 </div>
 
