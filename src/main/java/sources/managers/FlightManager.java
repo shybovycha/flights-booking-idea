@@ -3,11 +3,13 @@ package sources.managers;
 import java.sql.Date;
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
 import sources.dao.*;
 import sources.entities.*;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 @Service
 public class FlightManager {
@@ -25,10 +27,12 @@ public class FlightManager {
         return flightDAO.find(id);
     }
 
+    @Transactional
     public void destroyAll() {
         flightDAO.destroyAll();
     }
 
+    @Transactional
     public void deleteEmpty() {
         String query = "DELETE FROM Flight f WHERE SIZE(f.tickets) = 0";
         flightDAO.updateQuery(query);
@@ -46,11 +50,13 @@ public class FlightManager {
         return flightDAO.getAvailableDestinations();
     }
 
+    @Transactional
     public Flight create(String from, String to, String date, double ticketCost) {
         Flight f = flightDAO.create(from, to, date, ticketCost);
         return flightDAO.save(f);
     }
 
+    @Transactional
     public Flight update(int id, String from, String to, String date, float ticketCost) {
         Flight f = flightDAO.find(id);
         f.setDeparture(from);
@@ -60,6 +66,7 @@ public class FlightManager {
         return flightDAO.save(f);
     }
 
+    @Transactional
     public Flight update(int id, String from, String to, Date date, float ticketCost) {
         Flight f = flightDAO.find(id);
         f.setDeparture(from);
@@ -69,10 +76,12 @@ public class FlightManager {
         return flightDAO.save(f);
     }
 
+    @Transactional
     public void destroy(int id) {
         flightDAO.destroy(id);
     }
 
+    @Transactional
     public void addTickets(int flightId, List<Ticket> tickets) {
         Flight f = flightDAO.find(flightId);
 

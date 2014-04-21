@@ -33,8 +33,10 @@ window.updateTotalCost = function updateTotal() {
 };
 
 $(document).ready(function () {
+    $("#date").datepicker({ dateFormat: 'dd/mm/yy', minDate: 0 });
     $(".datepicker").datepicker({ dateFormat: 'dd/mm/yy' });
 
+    $('.ui.dropdown').dropdown();
     $('.ui.sidebar').sidebar();
 
     $('.add-user.modal').modal('attach events', '.add-user.button', 'show');

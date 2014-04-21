@@ -34,9 +34,17 @@
 
             <div class="field">
                 <label>Role</label>
-                <h:selectOneMenu value="#{ root.role }">
-                    <f:selectItems value="#{ root.userRoles }"/>
-                </h:selectOneMenu>
+
+                <div class="ui dropdown selection">
+                    <h:inputHidden value="#{ root.role }" />
+                    <div class="default text">#{ root.role }</div>
+                    <i class="dropdown icon" />
+                    <div class="menu">
+                        <c:forEach items="#{ root.userRoles }" var="role">
+                            <div class="item" data-value="#{ role.value }">#{ role.key }</div>
+                        </c:forEach>
+                    </div>
+                </div>
             </div>
 
             <h:commandButton action="#{ root.updateUser }" styleClass="ui tiny green button edit-user"

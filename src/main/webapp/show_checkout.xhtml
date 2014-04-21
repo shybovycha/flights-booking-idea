@@ -52,7 +52,7 @@
                 </div>
 
                 <div class="field">
-                    <label><strong>Total sum:</strong></label>
+                    <label><strong>Total sum, USD:</strong></label>
 
                     <div class="ui icon input">
                         <i class="money icon"/>
@@ -82,7 +82,7 @@
                 </h:column>
 
                 <h:column>
-                    <f:facet name="header">Price</f:facet>
+                    <f:facet name="header">Price, USD</f:facet>
                     #{ f.ticketCost }
                 </h:column>
 
@@ -90,18 +90,6 @@
                     <f:facet name="header">Amount</f:facet>
                     #{ cart.getTickets(f) }
                 </h:column>
-
-                <!--<h:column>-->
-                    <!--<f:facet name="header">Actions</f:facet>-->
-
-                    <!--<h:form>-->
-                        <!--<h:commandButton action="#{ cart.editTickets(f) }" styleClass="ui tiny green button edit-user"-->
-                                         <!--value="Edit" />-->
-
-                        <!--<h:commandButton action="#{ cart.removeTickets(f) }" styleClass="ui tiny red button edit-user"-->
-                                         <!--value="Remove" />-->
-                    <!--</h:form>-->
-                <!--</h:column>-->
             </h:dataTable>
         </div>
     </ui:define>

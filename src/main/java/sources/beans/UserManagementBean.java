@@ -68,8 +68,15 @@ public class UserManagementBean {
         return "edit_user";
     }
 
+    public String newUser() {
+        clearUser();
+
+        return "create_user";
+    }
+
     public String removeUser(int id) {
         userManager.destroy(id);
+        clearUser();
 
         return "root";
     }
@@ -83,13 +90,22 @@ public class UserManagementBean {
         this.role = u.getRole();
     }
 
+    public void clearUser() {
+        this.userId = 0;
+        this.username = "";
+        this.password = "";
+        this.role = "";
+    }
+
     public String updateUser() {
         userManager.update(userId, username, password, role, true);
+
         return "root";
     }
 
     public String createUser() {
         userManager.create(username, password, role);
+
         return "root";
     }
 

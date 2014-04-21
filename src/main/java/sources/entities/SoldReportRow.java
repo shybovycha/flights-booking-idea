@@ -19,6 +19,14 @@ public class SoldReportRow {
         this.date = new DateTime(date);
     }
 
+    public SoldReportRow(Long date, String departure, String destination, Integer ticketsSold, Double totalCost) {
+        this.departure = departure;
+        this.destination = destination;
+        this.ticketsSold = ticketsSold;
+        this.totalCost = totalCost.floatValue();
+        this.date = new DateTime(date);
+    }
+
     public String getDeparture() {
         return departure;
     }

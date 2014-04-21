@@ -7,8 +7,14 @@ import javax.persistence.*;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import sources.entities.AbstractEntity;
 
 @Repository
@@ -16,13 +22,6 @@ public abstract class BaseDAO {
     public abstract EntityManager getEntityManager();
 
     public static Date str2date(String date) {
-        /*Date dt = null;
-
-        try {
-            dt = new Date(new SimpleDateFormat("dd/MM/yyyy").parse(date).getTime());
-        } catch (Exception e) {
-        }*/
-
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yyyy");
         Date dt = new Date(fmt.parseDateTime(date).toDate().getTime());
 
@@ -42,7 +41,6 @@ public abstract class BaseDAO {
         return entityClass.cast(entity);
     }
 
-    @Transactional
     public <T extends AbstractEntity> T save(T entity) {
         EntityManager entityManager = getEntityManager();
 
@@ -71,15 +69,11 @@ public abstract class BaseDAO {
         return entities;
     }
 
-    @Transactional
     public <T> int updateQuery(String query) {
         EntityManager entityManager = getEntityManager();
-        //EntityTransaction tx = entityManager.getTransaction();
         int results = 0;
 
-        //tx.begin();
         results = entityManager.createQuery(query).executeUpdate();
-        //tx.commit();
 
         return results;
     }
@@ -99,30 +93,26 @@ public abstract class BaseDAO {
         return entities;
     }
 
-    @Transactional
     public <T> void destroy(Class<T> entityClass, int id) {
         EntityManager entityManager = getEntityManager();
-        T entity = entityManager.find(entityClass, id);
-        //EntityTransaction tx = entityManager.getTransaction();
 
-        //tx.begin();
+        T entity = entityManager.find(entityClass, id);
+
+        entityManager.merge(entity);
+
         entityManager.remove(entity);
-        //tx.commit();
+
+        entityManager.flush();
     }
 
-    @Transactional
     public <T> void destroy(Class<T> entityClass, T entity) {
         EntityManager entityManager = getEntityManager();
-        //EntityTransaction tx = entityManager.getTransaction();
-
-        //tx.begin();
 
         if (!entityManager.contains(entity)) {
             entity = entityManager.merge(entity);
         }
 
         entityManager.remove(entity);
-        //tx.commit();
     }
 
     public <T> void destroyAll(Class<T> entityClass) {

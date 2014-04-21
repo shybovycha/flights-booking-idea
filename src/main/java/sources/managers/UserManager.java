@@ -2,6 +2,7 @@ package sources.managers;
 
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
 import sources.dao.TicketDAO;
 import sources.dao.UserDAO;
 import sources.entities.*;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 
 @Service
+@Transactional
 public class UserManager {
     @Inject
     private UserDAO userDAO;

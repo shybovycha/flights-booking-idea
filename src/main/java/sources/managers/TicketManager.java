@@ -2,14 +2,17 @@ package sources.managers;
 
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
 import sources.dao.FlightDAO;
 import sources.dao.TicketDAO;
 import sources.entities.*;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 @Service
+@Transactional
 public class TicketManager {
     @Inject
     private TicketDAO ticketDAO;
@@ -138,7 +141,7 @@ public class TicketManager {
         return ticketDAO.soldReportByDate(dateFrom, dateTo);
     }
 
-    public List<SoldReportRow> soldReportByDestination(String dateFrom, String dateTo) {
-        return ticketDAO.soldReportByDestination(dateFrom, dateTo);
+    public List<SoldReportRow> soldReportByRoute(String dateFrom, String dateTo) {
+        return ticketDAO.soldReportByRoute(dateFrom, dateTo);
     }
 }

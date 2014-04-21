@@ -115,6 +115,7 @@ public class CartBean {
 
     public String bookTickets(int flightId) {
         this.flight = flightManager.find(flightId);
+
         return "book_tickets";
     }
 
@@ -132,7 +133,7 @@ public class CartBean {
             this.tickets.put(this.flight, this.amount);
         }
 
-        return "show_cart";
+        return "search_results";
     }
 
     public String removeTickets(Flight f) {
@@ -140,7 +141,11 @@ public class CartBean {
             this.tickets.remove(f);
         }
 
-        return "show_cart";
+        if (this.tickets.isEmpty()) {
+            return "search_results";
+        } else {
+            return "show_cart";
+        }
     }
 
     public String checkoutOverview() {
@@ -179,5 +184,9 @@ public class CartBean {
         }
 
         return total;
+    }
+
+    public boolean getHasItems() {
+        return !(this.tickets == null || this.tickets.isEmpty());
     }
 }

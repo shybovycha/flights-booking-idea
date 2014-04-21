@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 public class LoginBean {
     private String username;
     private String password;
+    private String passwordConfirmation;
     private String message;
     private User user;
 
@@ -40,6 +41,14 @@ public class LoginBean {
         this.password = password;
     }
 
+    public String getPasswordConfirmation() {
+        return passwordConfirmation;
+    }
+
+    public void setPasswordConfirmation(String password) {
+        this.passwordConfirmation = password;
+    }
+
     public String getMessage() {
         return this.message;
     }
@@ -49,8 +58,29 @@ public class LoginBean {
     }
 
     public String updateUserPassword() {
+        if (!password.equals(passwordConfirmation)) {
+            this.message = "Passwords do not match";
+
+            return "edit_user_password";
+        }
+
         userManager.update(user.getId(), user.getUsername(), this.getPassword(), user.getRole(), false);
-        return "index";
+
+        return getUserPage();
+    }
+
+    public String getUserPage() {
+        if (user.isSuperUser()) {
+            return "root";
+        } else if (user.isAccountant()) {
+            return "booking_office_accountant";
+        } else if (user.isBookingAdministrator()) {
+            return "booking_office_administrator";
+        } else if (user.isBusinessAnalytic()) {
+            return "business_analytic";
+        } else {
+            return "login";
+        }
     }
 
     public String perform() {
@@ -61,15 +91,7 @@ public class LoginBean {
                 return "edit_user_password";
             }
 
-            if (user.isSuperUser()) {
-                return "root";
-            } else if (user.isAccountant()) {
-                return "booking_office_accountant";
-            } else if (user.isBookingAdministrator()) {
-                return "booking_office_administrator";
-            } else if (user.isBusinessAnalytic()) {
-                return "report";
-            }
+            return getUserPage();
         }
 
         this.setMessage("Could not find such user and password combination");

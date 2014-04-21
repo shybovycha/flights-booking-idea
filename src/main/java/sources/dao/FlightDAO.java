@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import sources.entities.*;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
@@ -40,7 +41,10 @@ public class FlightDAO extends BaseDAO {
     }
 
     public List<String> getAvailableDestinations() {
-        String query = "SELECT DISTINCT f.destination FROM Flight f";
+        String query = String.format(
+                "SELECT DISTINCT f.destination FROM Flight f WHERE f.date >= %d",
+                DateTime.now().toLocalDate().toDateTimeAtStartOfDay().getMillis()
+        );
 
         return query(String.class, query);
     }
@@ -71,6 +75,9 @@ public class FlightDAO extends BaseDAO {
     }
 
     public void destroy(int id) {
-        destroy(Flight.class, id);
+        //destroy(Flight.class, id);
+        String query = String.format("DELETE FROM Flight f WHERE f.id = %d", id);
+
+        updateQuery(query);
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html xmlns:ui="http://java.sun.com/jsf/facelets">
+<html xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jsp/jstl/core">
 <body>
 <ui:composition>
     <div class="ui menu">
@@ -10,8 +10,16 @@
         </a>
 
         <div class="right menu">
+            <c:if test="#{ cart.hasItems }">
+                <a class="item" href="/show_cart.xhtml">
+                    <i class="cart link icon" />
+                    Cart
+                </a>
+            </c:if>
+
             <a class="item" href="/login.xhtml">
-                <i class="user link icon"/>
+                <i class="user link icon" />
+                Log in
             </a>
         </div>
     </div>

@@ -15,7 +15,7 @@ a {
 }
 
 .tt-dropdown-menu {
-    background-color: #FCFFD5;
+    background-color: #fff;
     border-left: 5px solid #CFCECE;
     border-bottom: 1px solid #CFCECE;
     border-right: 1px solid #CFCECE;
@@ -27,8 +27,16 @@ a {
 }
 
 .tt-suggestion.tt-cursor {
-    background-color: #F9FF66;
+    background-color: #FCFFD5;
     cursor: pointer;
+}
+
+tr:hover td .actions {
+    visibility: visible;
+}
+
+tr td .actions {
+    visibility: hidden;
 }
 
 /*table.flights-table {

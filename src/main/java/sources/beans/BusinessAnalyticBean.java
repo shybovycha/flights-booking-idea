@@ -51,28 +51,66 @@ public class BusinessAnalyticBean {
         return "report";
     }
 
-    public String getChartData() {
+    public String getMonthlySeries() {
         if (getStartDate() == null || getEndDate() == null) {
             return "[]";
         }
 
+        List<SoldReportRow> reportRows = ticketManager.soldReportByDate(getStartDate(), getEndDate());
         Vector<String> data = new Vector<String>();
 
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("MMMM, yyyy");
+        for (SoldReportRow row : reportRows) {
+            data.add(String.format("%d", row.getTicketsSold()));
+        }
+
+        return String.format("[{ name: \"%s\", data: [ %s ] }]", "by month", StringUtils.join(data.toArray(), ","));
+    }
+
+    public String getRouteSeries() {
+        if (getStartDate() == null || getEndDate() == null) {
+            return "[]";
+        }
+
+        List<SoldReportRow> reportRows = ticketManager.soldReportByRoute(getStartDate(), getEndDate());
+        Vector<String> data = new Vector<String>();
+
+        for (SoldReportRow row : reportRows) {
+            data.add(String.format("%d", row.getTicketsSold()));
+        }
+
+        return String.format("[{ name: \"%s\", data: [ %s ] }]", "by route", StringUtils.join(data.toArray(), ","));
+    }
+
+    public String getMonthlyCategories() {
+        if (getStartDate() == null || getEndDate() == null) {
+            return "[]";
+        }
 
         List<SoldReportRow> reportRows = ticketManager.soldReportByDate(getStartDate(), getEndDate());
+        Vector<String> data = new Vector<String>();
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("MMMM");
 
         for (SoldReportRow row : reportRows) {
             String month = fmt.print(row.getDate());
-            String route = String.format("%s - %s", row.getDeparture(), row.getDestination());
-
-            data.add(String.format("{ name: \"%s\", data: [ \"%s\", %d ] }", route, month, row.getTicketsSold()));
+            data.add(String.format("\"%s\"", month));
         }
 
         return String.format("[%s]", StringUtils.join(data.toArray(), ","));
     }
 
-    public boolean getCanRender() {
-        return ((getStartDate() != null) && (getEndDate() != null));
+    public String getRouteCategories() {
+        if (getStartDate() == null || getEndDate() == null) {
+            return "[]";
+        }
+
+        List<SoldReportRow> reportRows = ticketManager.soldReportByDate(getStartDate(), getEndDate());
+        Vector<String> data = new Vector<String>();
+
+        for (SoldReportRow row : reportRows) {
+            String route = String.format("%s - %s", row.getDeparture(), row.getDestination());
+            data.add(String.format("\"%s\"", route));
+        }
+
+        return String.format("[%s]", StringUtils.join(data.toArray(), ","));
     }
 }

@@ -42,7 +42,7 @@
                 <div class="field">
                     <div class="ui icon input">
                         <i class="calendar icon"/>
-                        <h:inputText value="#{ search.date }" styleClass="datepicker" p:placeholder="Travelling at"/>
+                        <h:inputText value="#{ search.date }" p:placeholder="Travelling at" p:id="date" />
                     </div>
                 </div>
 
@@ -71,17 +71,19 @@
                     </h:column>
 
                     <h:column>
-                        <f:facet name="header">Price</f:facet>
+                        <f:facet name="header">Price, USD</f:facet>
                         #{ f.ticketCost }
                     </h:column>
 
                     <h:column>
                         <f:facet name="header">Actions</f:facet>
 
-                        <h:form>
-                            <h:commandButton action="#{ cart.bookTickets(f.id) }" styleClass="ui tiny blue button edit-user"
-                                             value="Add to cart" />
-                        </h:form>
+                        <div class="actions">
+                            <h:form>
+                                <h:commandButton action="#{ cart.bookTickets(f.id) }" styleClass="ui tiny blue button edit-user"
+                                                 value="Add to cart" />
+                            </h:form>
+                        </div>
                     </h:column>
                 </h:dataTable>
             </div>

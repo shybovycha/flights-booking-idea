@@ -1,6 +1,8 @@
 package sources.beans;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import sources.entities.Flight;
@@ -69,10 +71,25 @@ public class SearchBean {
     }
 
     public String perform() {
-        String now = DateTime.now().toString("dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy");
 
-        this.flights = (Vector<Flight>) flightManager.findFlights(destination, now, date);
-        // this.flights = (Vector<Flight>) FlightManager.all();
+        DateTime targetDate = formatter.parseDateTime(date),
+                now = DateTime.now(),
+                lowerBound,
+                upperBound;
+
+        if (targetDate.equals(now) || (targetDate.isAfter(now.minusDays(3)) && targetDate.isBefore(now.plusDays(3)))) {
+            lowerBound = now;
+            upperBound = now.plusDays(3);
+        } else {
+            lowerBound = targetDate.minusDays(3);
+            upperBound = targetDate.plusDays(3);
+        }
+
+        this.flights = (Vector<Flight>) flightManager.findFlights(destination,
+            lowerBound.toString("dd/MM/yyyy"),
+            upperBound.toString("dd/MM/yyyy")
+        );
 
         return "search_results";
     }

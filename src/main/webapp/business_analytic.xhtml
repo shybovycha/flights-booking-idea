@@ -3,6 +3,7 @@
       xmlns:c="http://java.sun.com/jsp/jstl/core"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
         >
 <head>
     <title>Booking Test Project</title>
@@ -11,12 +12,86 @@
 <body>
 <ui:composition template="templates/user_layout.xhtml">
     <ui:define name="content">
+        <c:if test="#{ report.startDate != null and report.endDate != null }">
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $('#by-month-chart-container').highcharts({
+                        title: {
+                            text: 'Tickets sold'
+                        },
+                        subtitle: {
+                            text: 'by months'
+                        },
+                        xAxis: {
+                            categories: #{ report.monthlyCategories }
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Ticket count',
+                                plotLines: [{
+                                    value: 0,
+                                    width: 1,
+                                    color: '#808080'
+                                }]
+                            }
+                        },
+                        series: #{ report.monthlySeries }
+                    });
+
+                    $('#by-route-chart-container').highcharts({
+                        title: {
+                            text: 'Tickets sold'
+                        },
+                        subtitle: {
+                            text: 'by route'
+                        },
+                        xAxis: {
+                            categories: #{ report.routeCategories }
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Ticket count',
+                                plotLines: [{
+                                    value: 0,
+                                    width: 1,
+                                    color: '#808080'
+                                }]
+                            }
+                        },
+                        series: #{ report.routeSeries }
+                    });
+                });
+            </script>
+        </c:if>
+
         <div class="ui fluid raised form segment">
-            <h3>Reports</h3>
+            <h3>Tickets ordered report</h3>
 
-            <!-- calendars here -->
+            <h:form>
+                <div class="two fields">
+                    <div class="field">
+                        <div class="ui icon input">
+                            <i class="calendar icon"/>
+                            <h:inputText value="#{ report.startDate }" styleClass="datepicker" p:placeholder="From..."/>
+                        </div>
+                    </div>
 
-            <a href="#" class="ui left aligned blue button"><i class="legal icon"/>Show</a>
+                    <div class="field">
+                        <div class="ui icon input">
+                            <i class="calendar icon"/>
+                            <h:inputText value="#{ report.endDate }" styleClass="datepicker" p:placeholder="To..."/>
+                        </div>
+                    </div>
+                </div>
+
+                <h:commandButton action="#{ report.update }" styleClass="ui left aligned blue button" value="View" />
+            </h:form>
+
+            <div id="by-month-chart-container" style="height: 400px; min-width: 310px; max-width: 600px; margin: 0 auto"></div>
+
+            <br />
+
+            <div id="by-route-chart-container" style="height: 400px; min-width: 310px; max-width: 600px; margin: 0 auto"></div>
         </div>
     </ui:define>
 </ui:composition>

@@ -1,9 +1,12 @@
 package sources.dao;
 
 import java.util.List;
+import java.util.Vector;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -42,7 +45,7 @@ public class TicketDAO extends BaseDAO {
         // DateTimeFormatter df = DateTimeFormat.forPattern("dd/MM/yyyy");
 
         String query = String.format("SELECT t FROM Ticket t WHERE t.owner.ownerFrom < %d AND t.status = 'BOOKED'",
-                DateTime.now().minusDays(3).getMillis());
+                DateTime.now().toLocalDate().toDateTimeAtStartOfDay().minusDays(3).getMillis());
 
         return query(Ticket.class, query);
     }
@@ -89,29 +92,56 @@ public class TicketDAO extends BaseDAO {
         DateTimeFormatter dfTxt = DateTimeFormat.forPattern("dd/MM/yyyy");
 
         String query = String.format(
-                "SELECT NEW sources.entities.SoldReportRow(f.date, f.departure, f.destination, COUNT(t.id), SUM(f.ticketCost)) FROM " +
-                "Ticket t JOIN t.flight f " +
-                "WHERE t.status = 'SOLD' AND t.owner IS NOT NULL AND (f.date BETWEEN %d and %d) " +
-                "GROUP BY f.id",
+                "SELECT f.date, f.departure, f.destination, COUNT(t.id), SUM(f.ticketCost) FROM " +
+                "tickets t JOIN flights f ON t.flightid = f.id " +
+                "WHERE t.status = 'SOLD' AND t.ownerfrom IS NOT NULL AND (f.date BETWEEN %d and %d) " +
+                "GROUP BY strftime('%%m', f.date)",
                 dfTxt.parseDateTime(from).getMillis(),
                 dfTxt.parseDateTime(to).getMillis()
         );
 
-        return query(SoldReportRow.class, query);
+        EntityManager entityManager = getEntityManager();
+        Query q = entityManager.createNativeQuery(query);
+
+        List<Object[]> rows = q.getResultList();
+        entityManager.close();
+
+        List<SoldReportRow> entities = new Vector<SoldReportRow>();
+
+        for (Object[] row : rows) {
+            SoldReportRow entity = new SoldReportRow(
+                    (Long) row[0],
+                    (String) row[1],
+                    (String) row[2],
+                    (Integer) row[3],
+                    (Double) row[4]
+            );
+
+            entities.add(entity);
+        }
+
+        return entities;
     }
 
-    /* TODO */
-    public List<SoldReportRow> soldReportByDestination(String from, String to) {
+    public List<SoldReportRow> soldReportByRoute(String from, String to) {
+        DateTimeFormatter dfTxt = DateTimeFormat.forPattern("dd/MM/yyyy");
+
         String query = String.format(
-            "SELECT " +
+            /*"SELECT " +
                 "NEW bionic_e9.coursework.entities.SoldReportLine(date, destination, SUM(cost), COUNT(id)) " +
             "FROM (" +
                 "SELECT t.id AS id, t.owner.ownerFrom AS date, f.destination AS destination, f.ticketCost AS cost " +
                 "FROM Ticket t JOIN t.flight f" +
-                "WHERE t.status = 'SOLD' AND t.owner IS NOT NULL AND t.owner.ownerFrom BETWEEN %s and %s" +
-                "GROUP BY date, destination" +
-            ")",
-            from, to);
+                "WHERE t.status = 'SOLD' AND t.owner IS NOT NULL AND t.owner.ownerFrom BETWEEN %s and %s " +
+                "GROUP BY departure, destination" +
+            ")",*/
+            "SELECT NEW sources.entities.SoldReportRow(f.date, f.departure, f.destination, COUNT(t.id), SUM(f.ticketCost)) FROM " +
+                    "Ticket t JOIN t.flight f " +
+                    "WHERE t.status = 'SOLD' AND t.owner IS NOT NULL AND (f.date BETWEEN %d and %d) " +
+                    "GROUP BY f.departure, f.destination",
+            dfTxt.parseDateTime(from).getMillis(),
+            dfTxt.parseDateTime(to).getMillis()
+        );
 
         return query(SoldReportRow.class, query);
     }

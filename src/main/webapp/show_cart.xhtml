@@ -14,48 +14,62 @@
 <ui:composition template="templates/user_layout.xhtml">
     <ui:define name="content">
         <div class="ui fluid raised form segment">
-            <h:dataTable value="#{ cart.flights }" var="f" styleClass="ui table segment">
-                <h:column>
-                    <f:facet name="header">From</f:facet>
-                    #{ f.departure }
-                </h:column>
+            <c:if test="#{ !cart.flights.isEmpty() }">
+                <h:dataTable value="#{ cart.flights }" var="f" styleClass="ui table segment">
+                    <h:column>
+                        <f:facet name="header">From</f:facet>
+                        #{ f.departure }
+                    </h:column>
 
-                <h:column>
-                    <f:facet name="header">To</f:facet>
-                    #{ f.destination }
-                </h:column>
+                    <h:column>
+                        <f:facet name="header">To</f:facet>
+                        #{ f.destination }
+                    </h:column>
 
-                <h:column>
-                    <f:facet name="header">At</f:facet>
-                    #{ f.date }
-                </h:column>
+                    <h:column>
+                        <f:facet name="header">At</f:facet>
+                        #{ f.date }
+                    </h:column>
 
-                <h:column>
-                    <f:facet name="header">Price</f:facet>
-                    #{ f.ticketCost }
-                </h:column>
+                    <h:column>
+                        <f:facet name="header">Price, USD</f:facet>
+                        #{ f.ticketCost }
+                    </h:column>
 
-                <h:column>
-                    <f:facet name="header">Amount</f:facet>
-                    #{ cart.getTickets(f) }
-                </h:column>
+                    <h:column>
+                        <f:facet name="header">Amount</f:facet>
+                        #{ cart.getTickets(f) }
+                    </h:column>
 
-                <h:column>
-                    <f:facet name="header">Actions</f:facet>
+                    <h:column>
+                        <f:facet name="header">Actions</f:facet>
 
-                    <h:form>
-                        <h:commandButton action="#{ cart.editTickets(f) }" styleClass="ui tiny green button edit-user"
-                                         value="Edit" />
+                        <div class="actions">
+                            <h:form>
+                                <h:commandButton action="#{ cart.editTickets(f) }" styleClass="ui tiny green button edit-user"
+                                                 value="Edit" />
 
-                        <h:commandButton action="#{ cart.removeTickets(f) }" styleClass="ui tiny red button edit-user"
-                                         value="Remove" />
-                    </h:form>
-                </h:column>
-            </h:dataTable>
+                                <span class="spacer" />
 
-            <h:form>
-                <h:commandButton styleClass="ui orange submit button" action="#{ cart.checkoutOverview }" value="Checkout"/>
-            </h:form>
+                                <h:commandButton action="#{ cart.removeTickets(f) }" styleClass="ui tiny red button edit-user"
+                                                 value="Remove" />
+                            </h:form>
+                        </div>
+                    </h:column>
+                </h:dataTable>
+
+                <b>Total cost, USD: #{ cart.total }</b>
+
+                <h:form>
+                    <h:commandButton styleClass="ui orange submit button" action="#{ cart.checkoutOverview }" value="Checkout"/>
+                </h:form>
+            </c:if>
+
+            <c:if test="#{ cart.flights.isEmpty() }">
+                <div class="ui teal inverted segment">
+                    No tickets added to cart
+                </div>
+            </c:if>
         </div>
     </ui:define>
 </ui:composition>
