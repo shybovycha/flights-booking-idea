@@ -98,4 +98,17 @@ public class LoginBean {
 
         return "login";
     }
+
+    public boolean getIsLoggedIn() {
+        return (this.user != null);
+    }
+
+    public String logOut() {
+        this.user = null;
+        this.username = "";
+        this.password = "";
+        this.passwordConfirmation = "";
+
+        return "login";
+    }
 }

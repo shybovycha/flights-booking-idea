@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jsp/jstl/core">
+<html xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html">
 <body>
 <ui:composition>
     <div class="ui menu">
@@ -17,10 +17,26 @@
                 </a>
             </c:if>
 
-            <a class="item" href="/login.xhtml">
-                <i class="user link icon" />
-                Log in
-            </a>
+            <c:if test="#{ !login.isLoggedIn }">
+                <a class="item" href="/login.xhtml">
+                    <i class="user link icon" />
+                    Log in
+                </a>
+            </c:if>
+
+            <c:if test="#{ login.isLoggedIn }">
+                <h:form>
+                    <h:commandLink styleClass="item" action="#{ login.getUserPage }">
+                        <i class="user link icon" />
+                        Dashboard
+                    </h:commandLink>
+
+                    <h:commandLink styleClass="item" action="#{ login.logOut }">
+                        <i class="sign out link icon" />
+                        Log out
+                    </h:commandLink>
+                </h:form>
+            </c:if>
         </div>
     </div>
 </ui:composition>

@@ -30,8 +30,7 @@ public class BookingOfficeAdministratorBean {
     private float ticketCost;
     private int ticketsToAdd;
     private Flight flight;
-    private ArrayList<Flight> flights;
-    private final int pageSize = 1;
+    private final int pageSize = 10;
     private int currentPage = 0;
 
     @Inject
@@ -155,22 +154,19 @@ public class BookingOfficeAdministratorBean {
     }
 
     public ArrayList<Flight> getFlights() {
-        Vector<Flight> items = (Vector<Flight>) flightManager.all();
-        this.flights = new ArrayList<Flight>(items.subList((currentPage * pageSize), (currentPage + 1) * pageSize));
-
-        return flights;
+        return new ArrayList<Flight>(flightManager.all(pageSize, currentPage * pageSize));
     }
 
     public void gotoPage(int page) {
-        if (page > 0 && page < getPagesCount()) {
-            this.currentPage = page;
+        if (page > 0 && page <= getPagesCount()) {
+            this.currentPage = page - 1;
         }
     }
 
     public int getPagesCount() {
         int flightsCount = flightManager.count();
 
-        if (this.flights == null || this.flights.isEmpty() || flightsCount < pageSize) {
+        if (flightsCount < pageSize) {
             return 0;
         }
 

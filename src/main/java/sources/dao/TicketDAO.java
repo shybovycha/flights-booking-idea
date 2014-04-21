@@ -42,10 +42,11 @@ public class TicketDAO extends BaseDAO {
     }
 
     public List<Ticket> outdated() {
-        // DateTimeFormatter df = DateTimeFormat.forPattern("dd/MM/yyyy");
-
-        String query = String.format("SELECT t FROM Ticket t WHERE t.owner.ownerFrom < %d AND t.status = 'BOOKED'",
-                DateTime.now().toLocalDate().toDateTimeAtStartOfDay().minusDays(3).getMillis());
+        String query = String.format(
+                "SELECT t FROM Ticket t JOIN Flight f WHERE t.owner.ownerFrom < %d AND f.date >= %d AND t.status = 'BOOKED'",
+                DateTime.now().toLocalDate().toDateTimeAtStartOfDay().minusDays(3).getMillis(),
+                DateTime.now().toLocalDate().toDateTimeAtStartOfDay().getMillis()
+        );
 
         return query(Ticket.class, query);
     }

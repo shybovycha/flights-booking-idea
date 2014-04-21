@@ -41,14 +41,24 @@ public class FlightDAO extends BaseDAO {
     }
 
     public List<Flight> all() {
-        String query = "SELECT f FROM Flight f";
+        String query = String.format(
+                "SELECT f FROM Flight f WHERE f.date >= %d",
+                DateTime.now().toLocalDate().toDateTimeAtStartOfDay().getMillis()
+        );
+
         return query(Flight.class, query);
     }
 
     public List<Flight> all(int limit, int offset) {
-        String query = "SELECT f FROM Flight f";
+        String query = String.format(
+                "SELECT f FROM Flight f WHERE f.date >= %d",
+                DateTime.now().toLocalDate().toDateTimeAtStartOfDay().getMillis()
+        );
+
         //return query(Flight.class, query, limit, offset);
-        return query(Flight.class, query).subList(limit, limit + offset);
+        List<Flight> results = query(Flight.class, query);
+
+        return results.subList(offset, Math.min(results.size(), offset + limit));
     }
 
     public List<String> getAvailableDestinations() {
@@ -86,7 +96,6 @@ public class FlightDAO extends BaseDAO {
     }
 
     public void destroy(int id) {
-        //destroy(Flight.class, id);
         String query = String.format("DELETE FROM Flight f WHERE f.id = %d", id);
 
         updateQuery(query);
