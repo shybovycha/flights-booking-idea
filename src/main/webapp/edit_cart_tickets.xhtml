@@ -14,20 +14,10 @@
 <ui:composition template="templates/user_layout.xhtml">
     <ui:define name="content">
         <script type="text/javascript">
-            function updateTotal() {
-                var tickets = parseInt($('#ticketAmount').val()),
-                        ticketCost = parseFloat($('#ticketCost').val());
-
-                if (tickets == NaN)
-                    tickets = 0;
-
-                $('#totalCost').val(tickets * ticketCost);
-            }
-
             $(document).ready(function() {
-                $('#ticketAmount').keyup(updateTotal);
+                $('#ticketAmount').keyup(updateTotalCost);
 
-                updateTotal();
+                updateTotalCost();
             });
         </script>
 

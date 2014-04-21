@@ -13,6 +13,23 @@
 <body>
 <ui:composition template="templates/user_layout.xhtml">
     <ui:define name="content">
+        <script type="text/javascript">
+            $(document).ready(function() {
+                var destinations = #{ search.availableDestinations };
+
+                $('#destination').typeahead(
+                        {
+                            minLength: 1,
+                            highlight: true
+                        },
+                        {
+                            name: 'search-destination-dataset',
+                            source: destinationMatcher(destinations)
+                        }
+                );
+            });
+        </script>
+
         <div class="ui fluid raised form segment">
             <h:form>
                 <div class="field">
@@ -33,40 +50,48 @@
             </h:form>
         </div>
 
-        <div class="ui fluid raised form segment">
-            <h3>Flights to: #{ search.destination } on #{ search.date }</h3>
+        <c:if test="#{ search.hasResults }">
+            <div class="ui fluid raised form segment">
+                <h3>Flights to: #{ search.destination } on #{ search.date }</h3>
 
-            <h:dataTable value="#{ search.flights }" var="f" styleClass="ui table segment">
-                <h:column>
-                    <f:facet name="header">From</f:facet>
-                    #{ f.departure }
-                </h:column>
+                <h:dataTable value="#{ search.flights }" var="f" styleClass="ui table segment">
+                    <h:column>
+                        <f:facet name="header">From</f:facet>
+                        #{ f.departure }
+                    </h:column>
 
-                <h:column>
-                    <f:facet name="header">To</f:facet>
-                    #{ f.destination }
-                </h:column>
+                    <h:column>
+                        <f:facet name="header">To</f:facet>
+                        #{ f.destination }
+                    </h:column>
 
-                <h:column>
-                    <f:facet name="header">At</f:facet>
-                    #{ f.date }
-                </h:column>
+                    <h:column>
+                        <f:facet name="header">At</f:facet>
+                        #{ f.date }
+                    </h:column>
 
-                <h:column>
-                    <f:facet name="header">Price</f:facet>
-                    #{ f.ticketCost }
-                </h:column>
+                    <h:column>
+                        <f:facet name="header">Price</f:facet>
+                        #{ f.ticketCost }
+                    </h:column>
 
-                <h:column>
-                    <f:facet name="header">Actions</f:facet>
+                    <h:column>
+                        <f:facet name="header">Actions</f:facet>
 
-                    <h:form>
-                        <h:commandButton action="#{ cart.bookTickets(f.id) }" styleClass="ui tiny blue button edit-user"
-                                         value="Add to cart" />
-                    </h:form>
-                </h:column>
-            </h:dataTable>
-        </div>
+                        <h:form>
+                            <h:commandButton action="#{ cart.bookTickets(f.id) }" styleClass="ui tiny blue button edit-user"
+                                             value="Add to cart" />
+                        </h:form>
+                    </h:column>
+                </h:dataTable>
+            </div>
+        </c:if>
+
+        <c:if test="#{ !search.hasResults }">
+            <div class="ui orange inverted segment">
+                Sorry, no flights in three days around #{ search.date } to #{ search.destination } found.
+            </div>
+        </c:if>
     </ui:define>
 </ui:composition>
 </body>

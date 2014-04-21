@@ -49,6 +49,25 @@ public class SearchBean {
         this.flights = value;
     }
 
+    public boolean getHasResults() {
+        return !(this.flights == null || this.flights.isEmpty());
+    }
+
+    public String getAvailableDestinations() {
+        Vector<String> destinations = (Vector<String>) flightManager.getAvailableDestinations();
+        String result = "";
+
+        for (int i = 0; i < destinations.size(); i++) {
+            result += String.format("'%s'", destinations.get(i));
+
+            if (i < destinations.size() - 1) {
+                result += ",";
+            }
+        }
+
+        return String.format("[%s]", result);
+    }
+
     public String perform() {
         String now = DateTime.now().toString("dd/MM/yyyy");
 

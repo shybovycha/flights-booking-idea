@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 @Repository
 public class FlightDAO extends BaseDAO {
@@ -36,6 +37,12 @@ public class FlightDAO extends BaseDAO {
     public List<Flight> all() {
         String query = "SELECT f FROM Flight f";
         return query(Flight.class, query);
+    }
+
+    public List<String> getAvailableDestinations() {
+        String query = "SELECT DISTINCT f.destination FROM Flight f";
+
+        return query(String.class, query);
     }
 
     public List<Flight> find(String destination, Date date) {

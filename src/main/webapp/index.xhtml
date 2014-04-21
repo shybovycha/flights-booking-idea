@@ -13,19 +13,52 @@
 <body>
 <ui:composition template="templates/user_layout.xhtml">
     <ui:define name="content">
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#destination').val('');
+                $('#date').val('');
+
+                var destinations = #{ search.availableDestinations };
+
+                $('#destination').typeahead(
+                    {
+                        minLength: 1,
+                        highlight: true
+                    },
+                    {
+                        name: 'search-destination-dataset',
+                        source: destinationMatcher(destinations)
+                    }
+                );
+            });
+        </script>
+
+        <div class="ui blue inverted segment">
+            This site allows you to buy tickets to flights all around the world.
+            <br />
+            Good point to start with is a search. Please, try this out: just enter
+            the <b>destination</b> and <b>desired date</b> to the form below and press <b>Find</b>.
+            <br />
+            <b>Note:</b> your order will stay in <em>booked</em> state for <b>three days</b> only.
+        </div>
+
         <div class="ui fluid raised form segment">
             <h:form>
                 <div class="field">
+                    <label>Destination:</label>
+
                     <div class="ui icon input">
                         <i class="location icon"/>
-                        <h:inputText value="#{ search.destination }" p:placeholder="Travelling to"/>
+                        <h:inputText value="#{ search.destination }" p:placeholder="Travelling to" p:id="destination" />
                     </div>
                 </div>
 
                 <div class="field">
+                    <label>Date:</label>
+
                     <div class="ui icon input">
                         <i class="calendar icon"/>
-                        <h:inputText value="#{ search.date }" styleClass="datepicker" p:placeholder="Travelling at"/>
+                        <h:inputText value="#{ search.date }" styleClass="datepicker" p:placeholder="Travelling at" p:id="date" />
                     </div>
                 </div>
 

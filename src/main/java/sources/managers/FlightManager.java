@@ -42,6 +42,10 @@ public class FlightManager {
         return flightDAO.find(to, BaseDAO.str2date(fromDate), BaseDAO.str2date(toDate));
     }
 
+    public List<String> getAvailableDestinations() {
+        return flightDAO.getAvailableDestinations();
+    }
+
     public Flight create(String from, String to, String date, double ticketCost) {
         Flight f = flightDAO.create(from, to, date, ticketCost);
         return flightDAO.save(f);
