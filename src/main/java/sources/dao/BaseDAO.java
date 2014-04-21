@@ -69,6 +69,20 @@ public abstract class BaseDAO {
         return entities;
     }
 
+    public <T> List<T> query(Class<T> entityClass, String query, int limit, int offset) {
+        EntityManager entityManager = getEntityManager();
+        TypedQuery<T> q = entityManager.createQuery(query, entityClass);
+        List<T> entities = null;
+
+        try {
+            entities = q.setFirstResult(offset).setMaxResults(limit).getResultList();
+        } finally {
+            entityManager.close();
+        }
+
+        return entities;
+    }
+
     public <T> int updateQuery(String query) {
         EntityManager entityManager = getEntityManager();
         int results = 0;

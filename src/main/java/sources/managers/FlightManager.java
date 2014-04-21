@@ -23,8 +23,16 @@ public class FlightManager {
         return flightDAO.all();
     }
 
+    public List<Flight> all(int limit, int offset) {
+        return flightDAO.all(limit, offset);
+    }
+
     public Flight find(int id) {
         return flightDAO.find(id);
+    }
+
+    public int count() {
+        return flightDAO.count();
     }
 
     @Transactional

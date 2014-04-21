@@ -1,6 +1,7 @@
 package sources.beans;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.faces.bean.ManagedBean;
@@ -29,6 +30,9 @@ public class BookingOfficeAdministratorBean {
     private float ticketCost;
     private int ticketsToAdd;
     private Flight flight;
+    private ArrayList<Flight> flights;
+    private final int pageSize = 1;
+    private int currentPage = 0;
 
     @Inject
     private TicketManager ticketManager;
@@ -87,6 +91,14 @@ public class BookingOfficeAdministratorBean {
         this.ticketCost = ticketCost;
     }
 
+    public int getCurrentPage() {
+        return this.currentPage + 1;
+    }
+
+    public void setCurrentPage(int value) {
+        this.currentPage = value;
+    }
+
     public String editFlight(int flightId) {
         this.flight = flightManager.find(flightId);
         this.departure = this.flight.getDeparture();
@@ -142,9 +154,26 @@ public class BookingOfficeAdministratorBean {
         return (ticketManager.getOutdatedTicketsAmount() > 0);
     }
 
-    public Vector<Flight> getFlights() {
-        Vector<Flight> flights = (Vector<Flight>) flightManager.all();
+    public ArrayList<Flight> getFlights() {
+        Vector<Flight> items = (Vector<Flight>) flightManager.all();
+        this.flights = new ArrayList<Flight>(items.subList((currentPage * pageSize), (currentPage + 1) * pageSize));
 
         return flights;
+    }
+
+    public void gotoPage(int page) {
+        if (page > 0 && page < getPagesCount()) {
+            this.currentPage = page;
+        }
+    }
+
+    public int getPagesCount() {
+        int flightsCount = flightManager.count();
+
+        if (this.flights == null || this.flights.isEmpty() || flightsCount < pageSize) {
+            return 0;
+        }
+
+        return (flightsCount / pageSize);
     }
 }

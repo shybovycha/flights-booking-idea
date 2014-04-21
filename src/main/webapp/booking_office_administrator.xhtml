@@ -63,6 +63,54 @@
                         </h:column>
                     </h:dataTable>
 
+                    <c:if test="#{ administrator.pagesCount > 0 }">
+                        <h:form>
+                            <div class="ui pagination menu">
+                                <c:if test="#{ administrator.currentPage le 3 }">
+                                    <c:forEach begin="1" end="#{ administrator.currentPage - 1 }" var="page">
+                                        <h:commandLink action="#{ administrator.gotoPage(page) }" styleClass="item">
+                                            #{ page }
+                                        </h:commandLink>
+                                    </c:forEach>
+                                </c:if>
+
+                                <c:if test="#{ administrator.currentPage gt 3 }">
+                                    <div class="disabled item">
+                                        ...
+                                    </div>
+
+                                    <a class="active item">
+                                        #{ administrator.currentPage }
+                                    </a>
+
+                                    <div class="disabled item">
+                                        ...
+                                    </div>
+                                </c:if>
+
+                                <c:if test="#{ (administrator.pagesCount - administrator.currentPage) gt 3 }">
+                                    <div class="disabled item">
+                                        ...
+                                    </div>
+
+                                    <a class="item">
+                                        #{ administrator.pagesCount }
+                                    </a>
+                                </c:if>
+
+                                <c:if test="#{ (administrator.pagesCount - administrator.currentPage) le 3 }">
+                                    <c:forEach begin="#{ administrator.currentPage + 1 }" end="#{ administrator.pagesCount }" var="page">
+                                        <a class="item">
+                                            #{ page }
+                                        </a>
+                                    </c:forEach>
+                                </c:if>
+                            </div>
+                        </h:form>
+
+                        <br />
+                    </c:if>
+
                     <c:if test="#{ administrator.hasOutdatedTickets }">
                         <h:form>
                             <h:commandButton action="#{ administrator.removeOutdatedTickets }" styleClass="ui green button"

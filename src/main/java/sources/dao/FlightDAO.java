@@ -27,6 +27,11 @@ public class FlightDAO extends BaseDAO {
         destroyAll(Flight.class);
     }
 
+    public int count() {
+        String query = "SELECT COUNT(f.id) FROM Flight f";
+        return getEntityManager().createQuery(query, Long.class).getSingleResult().intValue();
+    }
+
     public Flight create(String departure, String destination, String date, double ticketCost) {
         return new Flight(departure, destination, str2date(date), (float) ticketCost);
     }
@@ -38,6 +43,12 @@ public class FlightDAO extends BaseDAO {
     public List<Flight> all() {
         String query = "SELECT f FROM Flight f";
         return query(Flight.class, query);
+    }
+
+    public List<Flight> all(int limit, int offset) {
+        String query = "SELECT f FROM Flight f";
+        //return query(Flight.class, query, limit, offset);
+        return query(Flight.class, query).subList(limit, limit + offset);
     }
 
     public List<String> getAvailableDestinations() {
