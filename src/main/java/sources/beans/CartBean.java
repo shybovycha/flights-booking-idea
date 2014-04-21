@@ -2,6 +2,7 @@ package sources.beans;
 
 import org.springframework.context.annotation.Scope;
 import sources.dao.FlightDAO;
+import sources.dao.TicketDAO;
 import sources.entities.Flight;
 import sources.entities.Owner;
 import sources.managers.FlightManager;
@@ -169,6 +170,8 @@ public class CartBean {
         for (Map.Entry<Flight, Integer> pair : this.tickets.entrySet()) {
             ticketManager.bookTickets(pair.getKey(), pair.getValue(), owner);
         }
+
+        tickets.clear();
 
         return "index";
     }

@@ -60,8 +60,8 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <!--<context-param>-->
-    <!--<param-name>javax.faces.PROJECT_STAGE</param-name>-->
-    <!--<param-value>Production</param-value>-->
-    <!--</context-param>-->
+    <context-param>
+        <param-name>javax.faces.PROJECT_STAGE</param-name>
+        <param-value>Production</param-value>
+    </context-param>
 </web-app>
