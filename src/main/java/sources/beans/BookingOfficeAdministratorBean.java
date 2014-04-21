@@ -27,6 +27,7 @@ public class BookingOfficeAdministratorBean {
     private String destination;
     private String departure;
     private String date;
+    private String filterDate;
     private float ticketCost;
     private int ticketsToAdd;
     private Flight flight;
@@ -40,6 +41,14 @@ public class BookingOfficeAdministratorBean {
     private FlightManager flightManager;
 
     public BookingOfficeAdministratorBean() {
+    }
+
+    public String getFilterDate() {
+        return filterDate;
+    }
+
+    public void setFilterDate(String filterDate) {
+        this.filterDate = filterDate;
     }
 
     public int getTicketsToAdd() {
@@ -154,7 +163,11 @@ public class BookingOfficeAdministratorBean {
     }
 
     public ArrayList<Flight> getFlights() {
-        return new ArrayList<Flight>(flightManager.all(pageSize, currentPage * pageSize));
+        if (filterDate == null || filterDate.isEmpty()) {
+            return new ArrayList<Flight>(flightManager.all(pageSize, currentPage * pageSize));
+        } else {
+            return new ArrayList<Flight>(flightManager.filter(filterDate, pageSize, currentPage * pageSize));
+        }
     }
 
     public void gotoPage(int page) {
@@ -171,5 +184,9 @@ public class BookingOfficeAdministratorBean {
         }
 
         return (flightsCount / pageSize);
+    }
+
+    public String filter() {
+        return "booking_office_administrator";
     }
 }

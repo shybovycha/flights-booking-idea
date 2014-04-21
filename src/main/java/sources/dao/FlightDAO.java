@@ -70,6 +70,13 @@ public class FlightDAO extends BaseDAO {
         return query(String.class, query);
     }
 
+    public List<Flight> find(Date date) {
+        String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(date);
+        String query = String.format("SELECT f FROM Flight f WHERE f.date = '%s'", dateStr);
+
+        return query(Flight.class, query);
+    }
+
     public List<Flight> find(String destination, Date date) {
         String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(date);
         String query = String.format("SELECT f FROM Flight f WHERE f.destination LIKE '%%%s%%' AND f.date = '%s'",

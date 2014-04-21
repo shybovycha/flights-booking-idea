@@ -27,6 +27,12 @@ public class FlightManager {
         return flightDAO.all(limit, offset);
     }
 
+    public List<Flight> filter(String date, int limit, int offset) {
+        List<Flight> flights = flightDAO.find(BaseDAO.str2date(date));
+
+        return flights.subList(offset, Math.min(flights.size(), offset + limit));
+    }
+
     public Flight find(int id) {
         return flightDAO.find(id);
     }

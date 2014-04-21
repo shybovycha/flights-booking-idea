@@ -3,6 +3,7 @@
       xmlns:c="http://java.sun.com/jsp/jstl/core"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
 >
     <head>
         <title>Booking Test Project</title>
@@ -14,77 +15,98 @@
                 <div class="ui fluid raised form segment">
                     <h3>Flights available</h3>
 
-                    <h:form>
-                        <h:commandButton styleClass="ui blue submit button" value="Add" action="create_flight"/>
-                    </h:form>
-
-                    <h:dataTable value="#{ administrator.flights }" var="f" styleClass="ui table segment">
-                        <h:column>
-                            <f:facet name="header">From</f:facet>
-                            #{ f.departure }
-                        </h:column>
-
-                        <h:column>
-                            <f:facet name="header">To</f:facet>
-                            #{ f.destination }
-                        </h:column>
-
-                        <h:column>
-                            <f:facet name="header">At</f:facet>
-                            #{ f.date }
-                        </h:column>
-
-                        <h:column>
-                            <f:facet name="header">Price, USD</f:facet>
-                            #{ f.ticketCost }
-                        </h:column>
-
-                        <h:column>
-                            <f:facet name="header">Tickets</f:facet>
-                            #{ f.ticketsAmount }
-                        </h:column>
-
-                        <h:column>
-                            <f:facet name="header">Actions</f:facet>
-
-                            <div class="actions">
-                                <h:form>
-                                    <h:commandButton action="#{ administrator.editFlight(f.id) }" styleClass="ui tiny tail button edit-user"
-                                                     value="Edit">
-                                    </h:commandButton>
-
-                                    <span class="spacer" />
-
-                                    <h:commandButton action="#{ administrator.removeFlight(f.id) }" styleClass="ui tiny red button edit-user"
-                                                     value="Remove">
-                                    </h:commandButton>
-                                </h:form>
-                            </div>
-                        </h:column>
-                    </h:dataTable>
-
-                    <c:if test="#{ administrator.pagesCount > 0 }">
+                    <div class="field">
                         <h:form>
-                            <div class="ui pagination menu">
-                                <c:if test="#{ administrator.currentPage gt 1 }">
-                                    <h:commandLink action="#{ administrator.gotoPage(administrator.currentPage - 1) }" styleClass="icon item">
-                                        <i class="left arrow icon" />
-                                    </h:commandLink>
-                                </c:if>
+                            <h:commandButton styleClass="ui blue submit button" value="Add" action="create_flight"/>
+                        </h:form>
+                    </div>
 
-                                <div class="active item">
-                                    #{ administrator.currentPage }
-                                </div>
+                    <div class="field">
+                        <h:form>
+                            <label>Filter by date:</label>
 
-                                <c:if test="#{ administrator.currentPage lt administrator.pagesCount }">
-                                    <h:commandLink action="#{ administrator.gotoPage(administrator.currentPage + 1) }" styleClass="icon item">
-                                        <i class="right arrow icon" />
-                                    </h:commandLink>
-                                </c:if>
+                            <div class="ui action input">
+                                <h:inputText value="#{ administrator.filterDate }" p:id="date" p:placeholder="Filter by date" />
+                                <h:commandLink styleClass="ui blue button" value="Filter" action="#{ administrator.filter }" />
                             </div>
                         </h:form>
+                    </div>
 
-                        <br />
+                    <c:if test="#{ administrator.flights.isEmpty() }">
+                        <div class="ui green inverted segment">
+                            <p>No flights were found</p>
+                        </div>
+                    </c:if>
+
+                    <c:if test="#{ !administrator.flights.isEmpty() }">
+                        <h:dataTable value="#{ administrator.flights }" var="f" styleClass="ui table segment">
+                            <h:column>
+                                <f:facet name="header">From</f:facet>
+                                #{ f.departure }
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">To</f:facet>
+                                #{ f.destination }
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">At</f:facet>
+                                #{ f.date }
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Price, USD</f:facet>
+                                #{ f.ticketCost }
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Tickets</f:facet>
+                                #{ f.ticketsAmount }
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Actions</f:facet>
+
+                                <div class="actions">
+                                    <h:form>
+                                        <h:commandButton action="#{ administrator.editFlight(f.id) }" styleClass="ui tiny tail button edit-user"
+                                                         value="Edit">
+                                        </h:commandButton>
+
+                                        <span class="spacer" />
+
+                                        <h:commandButton action="#{ administrator.removeFlight(f.id) }" styleClass="ui tiny red button edit-user"
+                                                         value="Remove">
+                                        </h:commandButton>
+                                    </h:form>
+                                </div>
+                            </h:column>
+                        </h:dataTable>
+
+                        <c:if test="#{ administrator.pagesCount > 0 }">
+                            <h:form>
+                                <div class="ui pagination menu">
+                                    <c:if test="#{ administrator.currentPage gt 1 }">
+                                        <h:commandLink action="#{ administrator.gotoPage(administrator.currentPage - 1) }" styleClass="icon item">
+                                            <i class="left arrow icon" />
+                                        </h:commandLink>
+                                    </c:if>
+
+                                    <div class="active item">
+                                        #{ administrator.currentPage }
+                                    </div>
+
+                                    <c:if test="#{ administrator.currentPage lt administrator.pagesCount }">
+                                        <h:commandLink action="#{ administrator.gotoPage(administrator.currentPage + 1) }" styleClass="icon item">
+                                            <i class="right arrow icon" />
+                                        </h:commandLink>
+                                    </c:if>
+                                </div>
+                            </h:form>
+
+                            <br />
+                        </c:if>
                     </c:if>
 
                     <c:if test="#{ administrator.hasOutdatedTickets }">
