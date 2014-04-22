@@ -103,7 +103,7 @@ public class BusinessAnalyticBean {
             return "[]";
         }
 
-        List<SoldReportRow> reportRows = ticketManager.soldReportByDate(getStartDate(), getEndDate());
+        List<SoldReportRow> reportRows = ticketManager.soldReportByRoute(getStartDate(), getEndDate());
         Vector<String> data = new Vector<String>();
 
         for (SoldReportRow row : reportRows) {

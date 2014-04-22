@@ -39,6 +39,9 @@
                     });
 
                     $('#by-route-chart-container').highcharts({
+                        chart: {
+                            type: 'column'
+                        },
                         title: {
                             text: 'Tickets sold'
                         },
@@ -49,13 +52,15 @@
                             categories: #{ report.routeCategories }
                         },
                         yAxis: {
+                            min: 0,
                             title: {
-                                text: 'Ticket count',
-                                plotLines: [{
-                                    value: 0,
-                                    width: 1,
-                                    color: '#808080'
-                                }]
+                                text: 'Ticket count'
+                            }
+                        },
+                        plotOptions: {
+                            column: {
+                                plotPadding: 0.2,
+                                borderWidth: 0
                             }
                         },
                         series: #{ report.routeSeries }
