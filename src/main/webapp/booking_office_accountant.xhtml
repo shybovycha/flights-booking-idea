@@ -11,6 +11,14 @@
 <body>
 <ui:composition template="templates/user_layout.xhtml">
     <ui:define name="content">
+        <script type="text/javascript">
+            $(document).ready(function() {
+                displayMarkAsSoldButton();
+
+                $('.marked').change(displayMarkAsSoldButton);
+            });
+        </script>
+
         <div class="ui fluid raised form segment">
             <h3>Tickets ordered</h3>
 
@@ -18,7 +26,7 @@
                 <h:dataTable value="#{ bookingOfficeAccountant.tickets }" var="t" styleClass="ui table segment">
                     <h:column>
                         <f:facet name="header">Selected</f:facet>
-                        <h:selectBooleanCheckbox value="#{ bookingOfficeAccountant.selectedTickets[t.id] }" />
+                        <h:selectBooleanCheckbox value="#{ bookingOfficeAccountant.selectedTickets[t.id] }" styleClass="marked" />
                     </h:column>
 
                     <h:column>
@@ -42,7 +50,7 @@
                     </h:column>
                 </h:dataTable>
 
-                <h:commandButton action="#{ bookingOfficeAccountant.markAsSold }" styleClass="ui left aligned blue button"
+                <h:commandButton action="#{ bookingOfficeAccountant.markAsSold }" styleClass="ui left aligned blue button mark-as-sold"
                              value="Mark these as sold" />
             </h:form>
         </div>

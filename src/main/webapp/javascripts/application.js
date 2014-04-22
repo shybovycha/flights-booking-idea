@@ -32,6 +32,16 @@ window.updateTotalCost = function updateTotal() {
     $('#totalCost').val(tickets * ticketCost);
 };
 
+window.displayMarkAsSoldButton = function() {
+    var marked = $('.marked:checked').length;
+
+    if (marked < 1) {
+        $('.mark-as-sold').hide();
+    } else {
+        $('.mark-as-sold').show();
+    }
+};
+
 $(document).ready(function () {
     $("#date").datepicker({ dateFormat: 'dd/mm/yy', minDate: 0 });
     $(".datepicker").datepicker({ dateFormat: 'dd/mm/yy' });
