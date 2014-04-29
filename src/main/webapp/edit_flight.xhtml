@@ -14,13 +14,21 @@
     <ui:define name="content">
         <h3>Edit flight</h3>
 
+        <c:if test="#{ not empty facesContext.messageList }">
+            <div class="ui inverted segment">
+                <h:messages />
+            </div>
+        </c:if>
+
         <h:form styleClass="ui form">
             <div class="field">
                 <label>Departure:</label>
 
                 <div class="ui icon input">
                     <i class="location icon"/>
-                    <h:inputText value="#{ administrator.departure }" p:placeholder="From" />
+                    <h:inputText value="#{ administrator.departure }" p:placeholder="From">
+                        <f:validateLength minimum="3" maximum="100" />
+                    </h:inputText>
                 </div>
             </div>
 
@@ -29,7 +37,9 @@
 
                 <div class="ui icon input">
                     <i class="flag icon"/>
-                    <h:inputText value="#{ administrator.destination }" p:placeholder="To" />
+                    <h:inputText value="#{ administrator.destination }" p:placeholder="To">
+                        <f:validateLength minimum="3" maximum="50" />
+                    </h:inputText>
                 </div>
             </div>
 
@@ -47,7 +57,9 @@
 
                 <div class="ui icon input">
                     <i class="money icon"/>
-                    <h:inputText value="#{ administrator.ticketCost }" p:placeholder="Single ticket price" />
+                    <h:inputText value="#{ administrator.ticketCost }" p:placeholder="Single ticket price">
+                        <f:validateDoubleRange minimum="1.0" maximum="10000.0" />
+                    </h:inputText>
                 </div>
             </div>
 
@@ -56,7 +68,9 @@
 
                 <div class="ui icon input">
                     <i class="tags icon"/>
-                    <h:inputText value="#{ administrator.ticketsToAdd }" p:placeholder="Add free tickets" />
+                    <h:inputText value="#{ administrator.ticketsToAdd }" p:placeholder="Add free tickets">
+                        <f:validateLongRange minimum="0" maximum="100" />
+                    </h:inputText>
                 </div>
             </div>
 

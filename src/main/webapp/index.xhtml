@@ -43,13 +43,21 @@
         </div>
 
         <div class="ui fluid raised form segment">
+            <c:if test="#{ not empty facesContext.messageList }">
+                <div class="ui red inverted segment">
+                    <h:messages />
+                </div>
+            </c:if>
+
             <h:form>
                 <div class="field">
                     <label>Destination:</label>
 
                     <div class="ui icon input">
                         <i class="location icon"/>
-                        <h:inputText value="#{ search.destination }" p:placeholder="Travelling to" p:id="destination" />
+                        <h:inputText value="#{ search.destination }" p:placeholder="Travelling to" p:id="destination">
+                            <f:validateLength minimum="3" maximum="100" />
+                        </h:inputText>
                     </div>
                 </div>
 
@@ -58,7 +66,9 @@
 
                     <div class="ui icon input">
                         <i class="calendar icon"/>
-                        <h:inputText value="#{ search.date }" p:placeholder="Travelling at" p:id="date" />
+                        <h:inputText value="#{ search.date }" p:placeholder="Travelling at" p:id="date">
+                            <f:validateRegex pattern="^\\d+-\\d+-\\d+$" />
+                        </h:inputText>
                     </div>
                 </div>
 

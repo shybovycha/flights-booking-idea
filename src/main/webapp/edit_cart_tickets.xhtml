@@ -22,6 +22,12 @@
         </script>
 
         <div class="ui fluid raised form segment">
+            <c:if test="#{ not empty facesContext.messageList }">
+                <div class="ui inverted segment">
+                    <h:messages />
+                </div>
+            </c:if>
+
             <h:form>
                 <div class="field">
                     <label>Departure:</label>
@@ -73,7 +79,9 @@
 
                     <div class="ui icon input">
                         <i class="tags icon"/>
-                        <h:inputText value="#{ cart.amount }" p:placeholder="Amount" p:id="ticketAmount" />
+                        <h:inputText value="#{ cart.amount }" p:placeholder="Amount" p:id="ticketAmount">
+                            <f:validateLongRange minimum="1" maximum="100" />
+                        </h:inputText>
                     </div>
                 </div>
 

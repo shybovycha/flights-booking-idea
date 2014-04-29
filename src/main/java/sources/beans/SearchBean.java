@@ -8,10 +8,13 @@ import org.springframework.stereotype.Component;
 import sources.entities.Flight;
 import sources.managers.FlightManager;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.List;
 import java.util.Vector;
 
 @Named("search")
@@ -70,7 +73,23 @@ public class SearchBean {
         return String.format("[%s]", result);
     }
 
+    private boolean isValid() {
+        if (destination.isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage("destination", new FacesMessage("Destination is required"));
+        }
+
+        if (date.isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage("date", new FacesMessage("Date is required"));
+        }
+
+        return FacesContext.getCurrentInstance().getMessageList().isEmpty();
+    }
+
     public String perform() {
+        if (!isValid()) {
+            return "index";
+        }
+
         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy");
 
         DateTime targetDate = formatter.parseDateTime(date),

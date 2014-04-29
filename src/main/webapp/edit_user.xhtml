@@ -13,13 +13,21 @@
     <ui:define name="content">
         <h3>Edit user</h3>
 
+        <c:if test="#{ not empty facesContext.messageList }">
+            <div class="ui inverted segment">
+                <h:messages />
+            </div>
+        </c:if>
+
         <h:form styleClass="ui form">
             <div class="field">
                 <label>Name</label>
 
                 <div class="ui icon input">
                     <i class="user icon"/>
-                    <h:inputText value="#{ root.username }"/>
+                    <h:inputText value="#{ root.username }">
+                        <f:validateLength minimum="4" maximum="50" />
+                    </h:inputText>
                 </div>
             </div>
 
@@ -28,7 +36,9 @@
 
                 <div class="ui icon input">
                     <i class="user icon"/>
-                    <h:inputSecret value="#{ root.password }"/>
+                    <h:inputSecret value="#{ root.password }">
+                        <f:validateLength minimum="4" maximum="50" />
+                    </h:inputSecret>
                 </div>
             </div>
 

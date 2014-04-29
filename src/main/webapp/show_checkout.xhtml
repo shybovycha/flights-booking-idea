@@ -22,32 +22,46 @@
         </div>
 
         <div class="ui fluid raised form segment">
+            <c:if test="#{ not empty facesContext.messageList }">
+                <div class="ui inverted segment">
+                    <h:messages />
+                </div>
+            </c:if>
+
             <h:form>
                 <div class="field">
                     <div class="ui icon input">
                         <i class="user icon"/>
-                        <h:inputText value="#{ cart.name }" p:placeholder="Your name" />
+                        <h:inputText value="#{ cart.name }" p:placeholder="Your name">
+                            <f:validateLength minimum="4" maximum="50" />
+                        </h:inputText>
                     </div>
                 </div>
 
                 <div class="field">
                     <div class="ui icon input">
                         <i class="building icon"/>
-                        <h:inputText value="#{ cart.address }" p:placeholder="Address" />
+                        <h:inputText value="#{ cart.address }" p:placeholder="Address">
+                            <f:validateLength minimum="4" maximum="150" />
+                        </h:inputText>
                     </div>
                 </div>
 
                 <div class="field">
                     <div class="ui icon input">
                         <i class="phone icon"/>
-                        <h:inputText value="#{ cart.phone }" p:placeholder="Phone number" />
+                        <h:inputText value="#{ cart.phone }" p:placeholder="Phone number">
+                            <f:validateRegex pattern="^[\\d-+()]{6,15}$" />
+                        </h:inputText>
                     </div>
                 </div>
 
                 <div class="field">
                     <div class="ui icon input">
                         <i class="mail icon"/>
-                        <h:inputText value="#{ cart.email }" p:placeholder="E-mail address" />
+                        <h:inputText value="#{ cart.email }" p:placeholder="E-mail address">
+                            <f:validateRegex pattern="^\\w+@\\w+\\.\\w+$" />
+                        </h:inputText>
                     </div>
                 </div>
 
