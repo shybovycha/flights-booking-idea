@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -26,6 +27,11 @@ public abstract class BaseDAO {
         Date dt = new Date(fmt.parseDateTime(date).toDate().getTime());
 
         return dt;
+    }
+
+    public static DateTime str2datetime(String date) {
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yyyy");
+        return fmt.parseDateTime(date);
     }
 
     public <T> T find(Class<T> entityClass, int id) {

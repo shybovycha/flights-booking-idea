@@ -28,7 +28,7 @@ public class FlightManager {
     }
 
     public List<Flight> filter(String date, int limit, int offset) {
-        List<Flight> flights = flightDAO.find(BaseDAO.str2date(date));
+        List<Flight> flights = flightDAO.find(BaseDAO.str2datetime(date));
 
         return flights.subList(offset, Math.min(flights.size(), offset + limit));
     }
@@ -44,12 +44,6 @@ public class FlightManager {
     @Transactional
     public void destroyAll() {
         flightDAO.destroyAll();
-    }
-
-    @Transactional
-    public void deleteEmpty() {
-        String query = "DELETE FROM Flight f WHERE SIZE(f.tickets) = 0";
-        flightDAO.updateQuery(query);
     }
 
     public List<Flight> findFlights(String to, String when) {

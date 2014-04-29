@@ -10,13 +10,6 @@
         </a>
 
         <div class="right menu">
-            <c:if test="#{ cart.hasItems }">
-                <a class="item" href="/show_cart.xhtml">
-                    <i class="cart link icon" />
-                    Cart <strong>($#{ cart.total })</strong>
-                </a>
-            </c:if>
-
             <c:if test="#{ !login.isLoggedIn }">
                 <a class="item" href="/login.xhtml">
                     <i class="user link icon" />

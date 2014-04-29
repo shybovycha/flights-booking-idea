@@ -3,6 +3,10 @@ a {
     color: #3939FC;
 }
 
+body {
+    font-family: sans-serif;
+}
+
 .spacer {
     display: inline;
     min-width: 20px;
@@ -32,6 +36,10 @@ a {
 }
 
 tr:hover td .actions {
+    visibility: visible;
+}
+
+table tbody tr:first-child td .actions {
     visibility: visible;
 }
 

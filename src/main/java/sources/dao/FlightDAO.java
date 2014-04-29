@@ -70,17 +70,30 @@ public class FlightDAO extends BaseDAO {
         return query(String.class, query);
     }
 
+    public List<Flight> find(DateTime date) {
+        Long dayStart = date.toLocalDate().toDateTimeAtStartOfDay().getMillis(),
+                dayEnd = date.plusDays(1).toLocalDate().toDateTimeAtStartOfDay().getMillis();
+
+        String query = String.format("SELECT f FROM Flight f WHERE f.date >= %d AND f.date <= %d", dayStart, dayEnd);
+
+        return query(Flight.class, query);
+    }
+
     public List<Flight> find(Date date) {
-        String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(date);
-        String query = String.format("SELECT f FROM Flight f WHERE f.date = '%s'", dateStr);
+        // String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(date);
+        Long dateStr = new DateTime(date).getMillis();
+        String query = String.format("SELECT f FROM Flight f WHERE f.date = %d", dateStr);
 
         return query(Flight.class, query);
     }
 
     public List<Flight> find(String destination, Date date) {
-        String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(date);
-        String query = String.format("SELECT f FROM Flight f WHERE f.destination LIKE '%%%s%%' AND f.date = '%s'",
-                destination, dateStr);
+        //String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(date);
+        Long dateStart = new DateTime(date).toLocalDate().toDateTimeAtStartOfDay().getMillis(),
+            dateEnd = new DateTime(date).plusDays(1).toLocalDate().toDateTimeAtStartOfDay().getMillis();
+
+        String query = String.format("SELECT f FROM Flight f WHERE f.destination LIKE '%%%s%%' AND f.date >= %d AND f.date <= %d",
+                destination, dateStart, dateEnd);
 
         return query(Flight.class, query);
     }
@@ -89,8 +102,8 @@ public class FlightDAO extends BaseDAO {
         String query = String.format(
                 "SELECT f FROM Flight f WHERE f.destination LIKE '%%%s%%' AND (f.date BETWEEN %d AND %d)",
                 destination,
-                new DateTime(dateFrom).getMillis(),
-                new DateTime(dateTo).getMillis()
+                new DateTime(dateFrom).toLocalDate().toDateTimeAtStartOfDay().getMillis(),
+                new DateTime(dateTo).plusDays(1).toLocalDate().toDateTimeAtStartOfDay().getMillis()
         );
 
         return query(Flight.class, query);
