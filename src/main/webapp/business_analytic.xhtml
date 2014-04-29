@@ -17,7 +17,8 @@
                 $(document).ready(function() {
                     $('#by-month-chart-container').highcharts({
                         title: {
-                            text: 'Tickets sold'
+                            text: 'Tickets sold',
+                            width: 400
                         },
                         subtitle: {
                             text: 'by months'
@@ -40,7 +41,8 @@
 
                     $('#by-route-chart-container').highcharts({
                         chart: {
-                            type: 'column'
+                            type: 'column',
+                            width: 400
                         },
                         title: {
                             text: 'Tickets sold'
@@ -92,11 +94,64 @@
                 <h:commandButton action="#{ report.update }" styleClass="ui left aligned blue button" value="View" />
             </h:form>
 
-            <div id="by-month-chart-container" style="height: 400px; min-width: 310px; max-width: 600px; margin: 0 auto"></div>
+            <c:if test="#{ report.startDate != null and report.endDate != null }">
+                <br />
 
-            <br />
+                <div class="tab segment">
+                    <div class="ui top attached tabular menu">
+                        <a class="active item" data-tab="month_report">By month</a>
+                        <a class="item" data-tab="route_report">By route</a>
+                    </div>
 
-            <div id="by-route-chart-container" style="height: 400px; min-width: 310px; max-width: 600px; margin: 0 auto"></div>
+                    <div class="ui bottom attached segment">
+                        <div class="ui active tab segment" data-tab="month_report">
+                            <div id="by-month-chart-container" style="height: 400px; min-width: 310px; max-width: 600px; margin: 0 auto"></div>
+
+                            <br />
+
+                            <h:dataTable value="#{ report.monthlyReport }" var="f" styleClass="ui table segment">
+                                <h:column>
+                                    <f:facet name="header">Month</f:facet>
+                                    #{ f.month }
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Tickets sold</f:facet>
+                                    #{ f.ticketsSold }
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Total amount</f:facet>
+                                    #{ f.totalCost }
+                                </h:column>
+                            </h:dataTable>
+                        </div>
+
+                        <div class="ui tab segment" data-tab="route_report">
+                            <div id="by-route-chart-container" style="height: 400px; min-width: 310px; max-width: 600px; margin: 0 auto"></div>
+
+                            <br />
+
+                            <h:dataTable value="#{ report.routeReport }" var="f" styleClass="ui table segment">
+                                <h:column>
+                                    <f:facet name="header">Route</f:facet>
+                                    #{ f.route }
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Tickets sold</f:facet>
+                                    #{ f.ticketsSold }
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Total amount</f:facet>
+                                    #{ f.totalCost }
+                                </h:column>
+                            </h:dataTable>
+                        </div>
+                    </div>
+                </div>
+            </c:if>
         </div>
     </ui:define>
 </ui:composition>

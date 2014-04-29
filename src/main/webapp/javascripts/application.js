@@ -49,6 +49,8 @@ $(document).ready(function () {
     $('.ui.dropdown').dropdown();
     $('.ui.sidebar').sidebar();
 
+    $('.tabular.menu .item').tab();
+
     $('.add-user.modal').modal('attach events', '.add-user.button', 'show');
     $('.edit-user.modal').modal('attach events', '.edit-user.button', 'show');
     $('.remove-user.modal').modal('attach events', '.remove-user.button', 'show');

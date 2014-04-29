@@ -96,7 +96,7 @@ public class TicketDAO extends BaseDAO {
                 "SELECT f.date, f.departure, f.destination, COUNT(t.id), SUM(f.ticketCost) FROM " +
                 "tickets t JOIN flights f ON t.flightid = f.id " +
                 "WHERE t.status = 'SOLD' AND t.ownerfrom IS NOT NULL AND (f.date BETWEEN %d and %d) " +
-                "GROUP BY strftime('%%m', f.date)",
+                "GROUP BY strftime('%%m', f.date / 1000, 'unixepoch')",
                 dfTxt.parseDateTime(from).getMillis(),
                 dfTxt.parseDateTime(to).getMillis()
         );

@@ -3,6 +3,8 @@ package sources.entities;
 import java.sql.Date;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 public class SoldReportRow {
     private String departure;
@@ -10,6 +12,12 @@ public class SoldReportRow {
     private DateTime date;
     private int ticketsSold;
     private float totalCost;
+
+    private static DateTimeFormatter fmt;
+
+    static {
+        fmt = DateTimeFormat.forPattern("MMMM");
+    }
 
     public SoldReportRow(Date date, String departure, String destination, Long ticketsSold, Double totalCost) {
         this.departure = departure;
@@ -65,5 +73,13 @@ public class SoldReportRow {
 
     public void setTotalCost(float totalCost) {
         this.totalCost = totalCost;
+    }
+
+    public String getMonth() {
+        return fmt.print(getDate());
+    }
+
+    public String getRoute() {
+        return String.format("%s - %s", getDeparture(), getDestination());
     }
 }

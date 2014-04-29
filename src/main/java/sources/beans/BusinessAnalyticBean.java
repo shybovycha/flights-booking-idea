@@ -113,4 +113,20 @@ public class BusinessAnalyticBean {
 
         return String.format("[%s]", StringUtils.join(data.toArray(), ","));
     }
+
+    public List<SoldReportRow> getMonthlyReport() {
+        if (getStartDate() == null || getEndDate() == null) {
+            return null;
+        }
+
+        return ticketManager.soldReportByDate(getStartDate(), getEndDate());
+    }
+
+    public List<SoldReportRow> getRouteReport() {
+        if (getStartDate() == null || getEndDate() == null) {
+            return null;
+        }
+
+        return ticketManager.soldReportByRoute(getStartDate(), getEndDate());
+    }
 }
