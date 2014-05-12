@@ -2325,7 +2325,7 @@ body > .ui.grid {
 
 .ui.attached.tabular.menu {
     position: relative;
-    z-index: 2;
+    z-index: 1;
 }
 
 .ui.tabular.menu ~ .bottom.attached.segment {

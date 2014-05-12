@@ -9,7 +9,6 @@ import sources.entities.*;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 @Service
 @Transactional
@@ -135,6 +134,10 @@ public class TicketManager {
         }
 
         return counter;
+    }
+
+    public List<SoldReportRow> soldReportByMonth(String dateFrom, String dateTo) {
+        return ticketDAO.soldReportByMonth(dateFrom, dateTo);
     }
 
     public List<SoldReportRow> soldReportByDate(String dateFrom, String dateTo) {

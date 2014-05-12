@@ -1,6 +1,7 @@
 package sources.entities;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -13,18 +14,20 @@ public class SoldReportRow {
     private int ticketsSold;
     private float totalCost;
 
-    private static DateTimeFormatter fmt;
+    private static DateTimeFormatter monthFormatter;
+    private static DateTimeFormatter dateFormatter;
 
     static {
-        fmt = DateTimeFormat.forPattern("MMMM");
+        monthFormatter = DateTimeFormat.forPattern("MMMM");
+        dateFormatter = DateTimeFormat.forPattern("dd-MM-YYYY");
     }
 
-    public SoldReportRow(Date date, String departure, String destination, Long ticketsSold, Double totalCost) {
+    public SoldReportRow(Timestamp date, String departure, String destination, Long ticketsSold, Double totalCost) {
         this.departure = departure;
         this.destination = destination;
         this.ticketsSold = ticketsSold.intValue();
         this.totalCost = totalCost.floatValue();
-        this.date = new DateTime(date);
+        this.date = new DateTime(date.getTime());
     }
 
     public SoldReportRow(Long date, String departure, String destination, Integer ticketsSold, Double totalCost) {
@@ -76,10 +79,14 @@ public class SoldReportRow {
     }
 
     public String getMonth() {
-        return fmt.print(getDate());
+        return monthFormatter.print(getDate());
     }
 
     public String getRoute() {
         return String.format("%s - %s", getDeparture(), getDestination());
+    }
+
+    public String getFormattedDate() {
+        return dateFormatter.print(getDate());
     }
 }

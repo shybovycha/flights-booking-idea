@@ -1,20 +1,12 @@
 package sources.beans;
 
 import org.springframework.context.annotation.Scope;
-import sources.dao.FlightDAO;
 import sources.entities.SoldReportRow;
 import org.apache.commons.lang3.StringUtils;
-import sources.dao.TicketDAO;
-import sources.entities.Flight;
-import sources.entities.Ticket;
-import sources.managers.FlightManager;
 import sources.managers.TicketManager;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.stereotype.Component;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.*;
@@ -56,7 +48,7 @@ public class BusinessAnalyticBean {
             return "[]";
         }
 
-        List<SoldReportRow> reportRows = ticketManager.soldReportByDate(getStartDate(), getEndDate());
+        List<SoldReportRow> reportRows = ticketManager.soldReportByMonth(getStartDate(), getEndDate());
         Vector<String> data = new Vector<String>();
 
         for (SoldReportRow row : reportRows) {
@@ -64,6 +56,21 @@ public class BusinessAnalyticBean {
         }
 
         return String.format("[{ name: \"%s\", data: [ %s ] }]", "by month", StringUtils.join(data.toArray(), ","));
+    }
+
+    public String getDateSeries() {
+        if (getStartDate() == null || getEndDate() == null) {
+            return "[]";
+        }
+
+        List<SoldReportRow> reportRows = ticketManager.soldReportByDate(getStartDate(), getEndDate());
+        Vector<String> data = new Vector<String>();
+
+        for (SoldReportRow row : reportRows) {
+            data.add(String.format("%d", row.getTicketsSold()));
+        }
+
+        return String.format("[{ name: \"%s\", data: [ %s ] }]", "by date", StringUtils.join(data.toArray(), ","));
     }
 
     public String getRouteSeries() {
@@ -86,13 +93,28 @@ public class BusinessAnalyticBean {
             return "[]";
         }
 
-        List<SoldReportRow> reportRows = ticketManager.soldReportByDate(getStartDate(), getEndDate());
+        List<SoldReportRow> reportRows = ticketManager.soldReportByMonth(getStartDate(), getEndDate());
         Vector<String> data = new Vector<String>();
         DateTimeFormatter fmt = DateTimeFormat.forPattern("MMMM");
 
         for (SoldReportRow row : reportRows) {
             String month = fmt.print(row.getDate());
             data.add(String.format("\"%s\"", month));
+        }
+
+        return String.format("[%s]", StringUtils.join(data.toArray(), ","));
+    }
+
+    public String getDateCategories() {
+        if (getStartDate() == null || getEndDate() == null) {
+            return "[]";
+        }
+
+        List<SoldReportRow> reportRows = ticketManager.soldReportByDate(getStartDate(), getEndDate());
+        Vector<String> data = new Vector<String>();
+
+        for (SoldReportRow row : reportRows) {
+            data.add(String.format("\"%s\"", row.getFormattedDate()));
         }
 
         return String.format("[%s]", StringUtils.join(data.toArray(), ","));
@@ -115,6 +137,14 @@ public class BusinessAnalyticBean {
     }
 
     public List<SoldReportRow> getMonthlyReport() {
+        if (getStartDate() == null || getEndDate() == null) {
+            return null;
+        }
+
+        return ticketManager.soldReportByMonth(getStartDate(), getEndDate());
+    }
+
+    public List<SoldReportRow> getDateReport() {
         if (getStartDate() == null || getEndDate() == null) {
             return null;
         }

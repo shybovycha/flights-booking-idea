@@ -39,6 +39,30 @@
                         series: #{ report.monthlySeries }
                     });
 
+                    $('#by-date-chart-container').highcharts({
+                        title: {
+                            text: 'Tickets sold',
+                            width: 400
+                        },
+                        subtitle: {
+                            text: 'by date'
+                        },
+                        xAxis: {
+                            categories: #{ report.dateCategories }
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Ticket count',
+                                plotLines: [{
+                                    value: 0,
+                                    width: 1,
+                                    color: '#808080'
+                                }]
+                            }
+                        },
+                        series: #{ report.dateSeries }
+                    });
+
                     $('#by-route-chart-container').highcharts({
                         chart: {
                             type: 'column',
@@ -99,11 +123,35 @@
 
                 <div class="tab segment">
                     <div class="ui top attached tabular menu">
+                        <a class="item" data-tab="date_report">By date</a>
                         <a class="active item" data-tab="month_report">By month</a>
                         <a class="item" data-tab="route_report">By route</a>
                     </div>
 
                     <div class="ui bottom attached segment">
+                        <div class="ui active tab segment" data-tab="date_report">
+                            <div id="by-date-chart-container" style="height: 400px; min-width: 310px; max-width: 600px; margin: 0 auto"></div>
+
+                            <br />
+
+                            <h:dataTable value="#{ report.dateReport }" var="f" styleClass="ui table segment">
+                                <h:column>
+                                    <f:facet name="header">Date</f:facet>
+                                    #{ f.formattedDate }
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Tickets sold</f:facet>
+                                    #{ f.ticketsSold }
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Total amount</f:facet>
+                                    #{ f.totalCost }
+                                </h:column>
+                            </h:dataTable>
+                        </div>
+
                         <div class="ui active tab segment" data-tab="month_report">
                             <div id="by-month-chart-container" style="height: 400px; min-width: 310px; max-width: 600px; margin: 0 auto"></div>
 

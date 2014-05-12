@@ -89,14 +89,14 @@ public class TicketDAO extends BaseDAO {
         return query(Ticket.class, query);
     }
 
-    public List<SoldReportRow> soldReportByDate(String from, String to) {
+    public List<SoldReportRow> soldReportByMonth(String from, String to) {
         DateTimeFormatter dfTxt = DateTimeFormat.forPattern("dd/MM/yyyy");
 
         String query = String.format(
-                "SELECT f.date, f.departure, f.destination, COUNT(t.id), SUM(f.ticketCost) FROM " +
+                "SELECT t.ownerfrom, f.departure, f.destination, COUNT(t.id), SUM(f.ticketCost) FROM " +
                 "tickets t JOIN flights f ON t.flightid = f.id " +
-                "WHERE t.status = 'SOLD' AND t.ownerfrom IS NOT NULL AND (f.date BETWEEN %d and %d) " +
-                "GROUP BY strftime('%%m', f.date / 1000, 'unixepoch')",
+                "WHERE t.status = 'SOLD' AND t.ownerfrom IS NOT NULL AND (t.ownerfrom BETWEEN %d and %d) " +
+                "GROUP BY strftime('%%m', t.ownerfrom / 1000, 'unixepoch')",
                 dfTxt.parseDateTime(from).getMillis(),
                 dfTxt.parseDateTime(to).getMillis()
         );
@@ -111,7 +111,42 @@ public class TicketDAO extends BaseDAO {
 
         for (Object[] row : rows) {
             SoldReportRow entity = new SoldReportRow(
-                    (Long) row[0],
+                    Long.parseLong((String) row[0]),
+                    (String) row[1],
+                    (String) row[2],
+                    (Integer) row[3],
+                    (Double) row[4]
+            );
+
+            entities.add(entity);
+        }
+
+        return entities;
+    }
+
+    public List<SoldReportRow> soldReportByDate(String from, String to) {
+        DateTimeFormatter dfTxt = DateTimeFormat.forPattern("dd/MM/yyyy");
+
+        String query = String.format(
+                "SELECT t.ownerfrom, f.departure, f.destination, COUNT(t.id), SUM(f.ticketCost) FROM " +
+                        "tickets t JOIN flights f ON t.flightid = f.id " +
+                        "WHERE t.status = 'SOLD' AND t.ownerfrom IS NOT NULL AND (t.ownerfrom BETWEEN %d and %d) " +
+                        "GROUP BY strftime('%%d-%%m-%%Y', t.ownerfrom / 1000, 'unixepoch')",
+                dfTxt.parseDateTime(from).getMillis(),
+                dfTxt.parseDateTime(to).getMillis()
+        );
+
+        EntityManager entityManager = getEntityManager();
+        Query q = entityManager.createNativeQuery(query);
+
+        List<Object[]> rows = q.getResultList();
+        entityManager.close();
+
+        List<SoldReportRow> entities = new Vector<SoldReportRow>();
+
+        for (Object[] row : rows) {
+            SoldReportRow entity = new SoldReportRow(
+                    Long.parseLong((String) row[0]),
                     (String) row[1],
                     (String) row[2],
                     (Integer) row[3],
