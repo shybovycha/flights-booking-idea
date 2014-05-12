@@ -1,10 +1,13 @@
 package sources.dao;
 
+import java.sql.Timestamp;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import sources.entities.*;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
@@ -32,8 +35,11 @@ public class FlightDAO extends BaseDAO {
         return getEntityManager().createQuery(query, Long.class).getSingleResult().intValue();
     }
 
-    public Flight create(String departure, String destination, String date, double ticketCost) {
-        return new Flight(departure, destination, str2date(date), (float) ticketCost);
+    public Flight create(String departure, String destination, String at, double ticketCost) {
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
+        Timestamp dt = new Timestamp(fmt.parseDateTime(at).toDate().getTime());
+
+        return new Flight(departure, destination, dt, (float) ticketCost);
     }
 
     public Flight find(int id) {

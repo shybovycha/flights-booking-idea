@@ -21,16 +21,23 @@
                         </h:form>
                     </div>
 
-                    <div class="field">
-                        <h:form>
-                            <label>Filter by date:</label>
+                    <h:form>
+                        <div class="inline fields">
+                            <div class="field">
+                                <div class="ui input">
+                                    <h:inputText value="#{ administrator.filterDate }" p:id="date" p:placeholder="Filter by date" />
+                                </div>
+                            </div>
 
-                            <div class="ui action input">
-                                <h:inputText value="#{ administrator.filterDate }" p:id="date" p:placeholder="Filter by date" />
+                            <div class="field">
+                                <a href="javascript:void(0);" class="ui orange clear button" data-input="#date">Clear</a>
+                            </div>
+
+                            <div class="field">
                                 <h:commandLink styleClass="ui blue button" value="Filter" action="#{ administrator.filter }" />
                             </div>
-                        </h:form>
-                    </div>
+                        </div>
+                    </h:form>
 
                     <c:if test="#{ administrator.flights.isEmpty() }">
                         <div class="ui green inverted segment">
@@ -52,7 +59,7 @@
 
                             <h:column>
                                 <f:facet name="header">At</f:facet>
-                                #{ f.date }
+                                #{ f.at }
                             </h:column>
 
                             <h:column>

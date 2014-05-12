@@ -653,6 +653,7 @@
 .ui.form .inline.fields .field > label,
 .ui.form .inline.fields .field > p,
 .ui.form .inline.fields .field > input,
+.ui.form .inline.fields .field > .input,
 .ui.form .inline.field > label,
 .ui.form .inline.field > p,
 .ui.form .inline.field > input {
@@ -665,6 +666,7 @@
 }
 
 .ui.form .inline.fields .field > input,
+.ui.form .inline.fields .field .input > input,
 .ui.form .inline.field > input {
     font-size: 0.875em;
 }

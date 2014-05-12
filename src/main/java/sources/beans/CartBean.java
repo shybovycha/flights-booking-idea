@@ -54,6 +54,10 @@ public class CartBean {
     }
 
     public int getAmount() {
+        if (amount < 1) {
+            amount = 1;
+        }
+
         return amount;
     }
 

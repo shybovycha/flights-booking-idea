@@ -1,6 +1,7 @@
 package sources.managers;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -59,27 +60,27 @@ public class FlightManager {
     }
 
     @Transactional
-    public Flight create(String from, String to, String date, double ticketCost) {
-        Flight f = flightDAO.create(from, to, date, ticketCost);
+    public Flight create(String from, String to, String at, double ticketCost) {
+        Flight f = flightDAO.create(from, to, at, ticketCost);
         return flightDAO.save(f);
     }
 
     @Transactional
-    public Flight update(int id, String from, String to, String date, float ticketCost) {
+    public Flight update(int id, String from, String to, String at, float ticketCost) {
         Flight f = flightDAO.find(id);
         f.setDeparture(from);
         f.setDestination(to);
-        f.setDate(BaseDAO.str2date(date));
+        f.setDate(BaseDAO.str2timestamp(at));
         f.setTicketCost(ticketCost);
         return flightDAO.save(f);
     }
 
     @Transactional
-    public Flight update(int id, String from, String to, Date date, float ticketCost) {
+    public Flight update(int id, String from, String to, Timestamp at, float ticketCost) {
         Flight f = flightDAO.find(id);
         f.setDeparture(from);
         f.setDestination(to);
-        f.setDate(date);
+        f.setDate(at);
         f.setTicketCost(ticketCost);
         return flightDAO.save(f);
     }

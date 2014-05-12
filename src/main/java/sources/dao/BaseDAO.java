@@ -1,6 +1,7 @@
 package sources.dao;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.*;
@@ -27,6 +28,13 @@ public abstract class BaseDAO {
         Date dt = new Date(fmt.parseDateTime(date).toDate().getTime());
 
         return dt;
+    }
+
+    public static Timestamp str2timestamp(String date) {
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
+        Timestamp ts = new Timestamp(fmt.parseDateTime(date).toDate().getTime());
+
+        return ts;
     }
 
     public static DateTime str2datetime(String date) {

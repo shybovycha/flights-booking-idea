@@ -13,99 +13,103 @@
 <body>
 <ui:composition template="templates/user_layout.xhtml">
     <ui:define name="content">
-        <div class="ui warning message">
-            <div class="header">
-                Attention, please!
+        <c:if test="#{ not cart.hasItems }">
+            <div class="ui info message">
+                No tickets were added to cart. Please, add something to proceed.
+            </div>
+        </c:if>
+
+        <c:if test="#{ cart.hasItems }">
+            <div class="ui warning message">
+                <div class="header">
+                    Attention, please!
+                </div>
+
+                Remember: your booking request will stay alive for only three days long!
             </div>
 
-            Remember: your booking request will stay alive for only three days long!
-        </div>
-
-        <div class="ui fluid raised form segment">
-            <c:if test="#{ not empty facesContext.messageList }">
-                <div class="ui inverted segment">
-                    <h:messages />
-                </div>
-            </c:if>
-
-            <h:form>
-                <div class="field">
-                    <div class="ui icon input">
-                        <i class="user icon"/>
-                        <h:inputText value="#{ cart.name }" p:placeholder="Your name">
-                            <f:validateLength minimum="4" maximum="50" />
-                        </h:inputText>
+            <div class="ui fluid raised form segment">
+                <c:if test="#{ not empty facesContext.messageList }">
+                    <div class="ui inverted segment">
+                        <h:messages />
                     </div>
-                </div>
+                </c:if>
 
-                <div class="field">
-                    <div class="ui icon input">
-                        <i class="building icon"/>
-                        <h:inputText value="#{ cart.address }" p:placeholder="Address">
-                            <f:validateLength minimum="4" maximum="150" />
-                        </h:inputText>
+                <h:form>
+                    <div class="field">
+                        <div class="ui icon input">
+                            <i class="user icon"/>
+                            <h:inputText value="#{ cart.name }" p:placeholder="Your name" required="true" requiredMessage="Name is mandatory" />
+                        </div>
                     </div>
-                </div>
 
-                <div class="field">
-                    <div class="ui icon input">
-                        <i class="phone icon"/>
-                        <h:inputText value="#{ cart.phone }" p:placeholder="Phone number">
-                            <f:validateRegex pattern="^[\\d-+()]{6,15}$" />
-                        </h:inputText>
+                    <div class="field">
+                        <div class="ui icon input">
+                            <i class="building icon"/>
+                            <h:inputText value="#{ cart.address }" p:placeholder="Address" required="true" requiredMessage="Address is mandatory" />
+                        </div>
                     </div>
-                </div>
 
-                <div class="field">
-                    <div class="ui icon input">
-                        <i class="mail icon"/>
-                        <h:inputText value="#{ cart.email }" p:placeholder="E-mail address">
-                            <f:validateRegex pattern="^\\w+@\\w+\\.\\w+$" />
-                        </h:inputText>
+                    <div class="field">
+                        <div class="ui icon input">
+                            <i class="phone icon"/>
+                            <h:inputText value="#{ cart.phone }" p:placeholder="Phone number" required="true" requiredMessage="Phone is required" validatorMessage="Enter a phone number, please">
+                                <f:validateRegex pattern="^[\d-+()]{6,15}$" />
+                            </h:inputText>
+                        </div>
                     </div>
-                </div>
 
-                <div class="field">
-                    <label><strong>Total sum, USD:</strong></label>
-
-                    <div class="ui icon input">
-                        <i class="money icon"/>
-                        <h:inputText value="#{ cart.total }" p:disabled="true" />
+                    <div class="field">
+                        <div class="ui icon input">
+                            <i class="mail icon"/>
+                            <h:inputText value="#{ cart.email }" p:placeholder="E-mail address" required="true" requiredMessage="Email is required" validatorMessage="Enter an email address, please">
+                                <f:validateRegex pattern="^\w+@\w+\.\w+$" />
+                            </h:inputText>
+                        </div>
                     </div>
-                </div>
 
-                <h:commandButton styleClass="ui orange submit button" action="#{ cart.checkout }" value="Checkout"/>
-            </h:form>
-        </div>
+                    <div class="field">
+                        <label><strong>Total sum, USD:</strong></label>
 
-        <div class="ui fluid raised segment">
-            <h:dataTable value="#{ cart.flights }" var="f" styleClass="ui table segment">
-                <h:column>
-                    <f:facet name="header">From</f:facet>
-                    #{ f.departure }
-                </h:column>
+                        <div class="ui icon input">
+                            <i class="money icon"/>
+                            <h:inputText value="#{ cart.total }" p:disabled="true" />
+                        </div>
+                    </div>
 
-                <h:column>
-                    <f:facet name="header">To</f:facet>
-                    #{ f.destination }
-                </h:column>
+                    <h:commandButton styleClass="ui orange submit button" action="#{ cart.checkout }" value="Checkout"/>
+                </h:form>
+            </div>
 
-                <h:column>
-                    <f:facet name="header">At</f:facet>
-                    #{ f.date }
-                </h:column>
+            <div class="ui fluid raised segment">
+                <h:dataTable value="#{ cart.flights }" var="f" styleClass="ui table segment">
+                    <h:column>
+                        <f:facet name="header">From</f:facet>
+                        #{ f.departure }
+                    </h:column>
 
-                <h:column>
-                    <f:facet name="header">Price, USD</f:facet>
-                    #{ f.ticketCost }
-                </h:column>
+                    <h:column>
+                        <f:facet name="header">To</f:facet>
+                        #{ f.destination }
+                    </h:column>
 
-                <h:column>
-                    <f:facet name="header">Amount</f:facet>
-                    #{ cart.getTickets(f) }
-                </h:column>
-            </h:dataTable>
-        </div>
+                    <h:column>
+                        <f:facet name="header">At</f:facet>
+                        #{ f.at }
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Price, USD</f:facet>
+                        #{ f.ticketCost }
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Amount</f:facet>
+                        #{ cart.getTickets(f) }
+                    </h:column>
+                </h:dataTable>
+            </div>
+        </c:if>
     </ui:define>
 </ui:composition>
 </body>

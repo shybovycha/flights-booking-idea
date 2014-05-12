@@ -50,9 +50,7 @@
                 <div class="field">
                     <div class="ui icon input">
                         <i class="calendar icon"/>
-                        <h:inputText value="#{ search.date }" p:placeholder="Travelling at" p:id="date">
-                            <f:validateRegex pattern="^\\d+-\\d+-\\d+$" />
-                        </h:inputText>
+                        <h:inputText value="#{ search.date }" p:placeholder="Travelling at" styleClass="from-now datepicker" />
                     </div>
                 </div>
 
@@ -77,7 +75,7 @@
 
                     <h:column>
                         <f:facet name="header">At</f:facet>
-                        #{ f.date }
+                        #{ f.at }
                     </h:column>
 
                     <h:column>

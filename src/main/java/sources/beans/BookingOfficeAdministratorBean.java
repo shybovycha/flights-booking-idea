@@ -1,6 +1,7 @@
 package sources.beans;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -27,6 +28,7 @@ public class BookingOfficeAdministratorBean {
     private String destination;
     private String departure;
     private String date;
+    private String time;
     private String filterDate;
     private float ticketCost;
     private int ticketsToAdd;
@@ -41,6 +43,14 @@ public class BookingOfficeAdministratorBean {
     private FlightManager flightManager;
 
     public BookingOfficeAdministratorBean() {
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getFilterDate() {
@@ -79,6 +89,10 @@ public class BookingOfficeAdministratorBean {
         return date;
     }
 
+    private String getAt() {
+        return String.format("%s %s", date, time);
+    }
+
     public void setDate(String date) {
         this.date = date;
     }
@@ -112,6 +126,7 @@ public class BookingOfficeAdministratorBean {
         this.departure = this.flight.getDeparture();
         this.destination = this.flight.getDestination();
         this.date = new DateTime(this.flight.getDate()).toString("dd/MM/yyyy");
+        this.time = new DateTime(this.flight.getDate()).toString("HH:mm");
         this.ticketCost = this.flight.getTicketCost();
         this.ticketsToAdd = 0;
 
@@ -124,13 +139,11 @@ public class BookingOfficeAdministratorBean {
     }
 
     public String updateFlight() {
-        DateTimeFormatter df = DateTimeFormat.forPattern("dd/MM/yyyy");
-
         this.flightManager.update(
                 flight.getId(),
                 departure,
                 destination,
-                new Date(df.parseDateTime(this.getDate()).toDate().getTime()),
+                this.getAt(),
                 ticketCost
         );
 
@@ -142,8 +155,8 @@ public class BookingOfficeAdministratorBean {
     }
 
     public String createFlight() {
-        Flight f = flightManager.create(departure, destination, date, ticketCost);
-        ticketManager.addFreeTickets(f, ticketsToAdd);
+        Flight f = flightManager.create(getDeparture(), getDestination(), getAt(), getTicketCost());
+        ticketManager.addFreeTickets(f, getTicketsToAdd());
 
         return "booking_office_administrator";
     }

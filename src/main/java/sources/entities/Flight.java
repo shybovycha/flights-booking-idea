@@ -1,8 +1,12 @@
 package sources.entities;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import javax.persistence.*;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +19,7 @@ public class Flight extends AbstractEntity {
 
     private String departure;
     private String destination;
-    private Date date;
+    private Timestamp date;
     private float ticketCost;
 
     @OneToMany(mappedBy="flight", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
@@ -24,10 +28,10 @@ public class Flight extends AbstractEntity {
     public Flight() {
     }
 
-    public Flight(String departure, String destination, Date date, float ticketCost) {
+    public Flight(String departure, String destination, Timestamp at, float ticketCost) {
         this.departure = departure;
         this.destination = destination;
-        this.date = date;
+        this.date = at;
         this.ticketCost = ticketCost;
     }
 
@@ -62,11 +66,11 @@ public class Flight extends AbstractEntity {
         this.destination = destination;
     }
 
-    public Date getDate() {
+    public Timestamp getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Timestamp date) {
         this.date = date;
     }
 
@@ -80,6 +84,11 @@ public class Flight extends AbstractEntity {
 
     public int getTicketsAmount() {
         return tickets.size();
+    }
+
+    public String getAt() {
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
+        return dtf.print(date.getTime());
     }
 
     public List<Ticket> getTickets() {

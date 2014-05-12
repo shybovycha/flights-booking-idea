@@ -44,11 +44,23 @@
             </div>
 
             <div class="field">
-                <label>Date:</label>
+                <label>At:</label>
+            </div>
 
-                <div class="ui icon input">
-                    <i class="calendar icon"/>
-                    <h:inputText styleClass="datepicker" value="#{ administrator.date }" p:placeholder="At" />
+            <div class="two fields">
+                <div class="field">
+                    <div class="ui icon input">
+                        <i class="calendar icon"/>
+                        <h:inputText styleClass="datepicker" value="#{ administrator.date }" p:placeholder="Date" />
+                    </div>
+                </div>
+
+
+                <div class="field">
+                    <div class="ui icon input clockpicker">
+                        <i class="time icon" />
+                        <h:inputText styleClass="timepicker form-control" value="#{ administrator.time }" p:placeholder="Time" />
+                    </div>
                 </div>
             </div>
 
