@@ -2,8 +2,11 @@ package sources.beans;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.context.annotation.Scope;
 import sources.entities.User;
@@ -17,7 +20,6 @@ public class LoginBean {
     private String password;
     private String passwordConfirmation;
     private String message;
-    private User user;
 
     @Inject
     private UserManager userManager;
@@ -57,6 +59,13 @@ public class LoginBean {
         this.message = value;
     }
 
+    private User getUser() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest)context.getExternalContext().getRequest();
+        HttpSession httpSession = request.getSession(false);
+        return (User) httpSession.getAttribute("user");
+    }
+
     public String updateUserPassword() {
         if (!password.equals(passwordConfirmation)) {
             this.message = "Passwords do not match";
@@ -64,12 +73,16 @@ public class LoginBean {
             return "edit_user_password";
         }
 
+        User user = this.getUser();
+
         userManager.update(user.getId(), user.getUsername(), this.getPassword(), user.getRole(), false);
 
         return getUserPage();
     }
 
     public String getUserPage() {
+        User user = this.getUser();
+
         if (user.isSuperUser()) {
             return "root";
         } else if (user.isAccountant()) {
@@ -84,14 +97,24 @@ public class LoginBean {
     }
 
     public String perform() {
-        user = userManager.authenticate(this.getUsername(), this.getPassword());
+        User user = userManager.authenticate(this.getUsername(), this.getPassword());
 
         if (user != null) {
             if (user.needsToChangePassword()) {
                 return "edit_user_password";
             }
 
-            return getUserPage();
+            FacesContext context = FacesContext.getCurrentInstance();
+            HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+            HttpSession httpSession = request.getSession(false);
+            httpSession.setAttribute("user", user);
+
+            try {
+                String url = getUserPage() + ".xhtml";
+                FacesContext.getCurrentInstance().getExternalContext().redirect(url);
+            } finally {
+                return getUserPage();
+            }
         }
 
         this.setMessage("Could not find such user and password combination");
@@ -100,14 +123,18 @@ public class LoginBean {
     }
 
     public boolean getIsLoggedIn() {
-        return (this.user != null);
+        return (this.getUser() != null);
     }
 
     public String logOut() {
-        this.user = null;
         this.username = "";
         this.password = "";
         this.passwordConfirmation = "";
+
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest)context.getExternalContext().getRequest();
+        HttpSession httpSession = request.getSession(false);
+        httpSession.setAttribute("user", null);
 
         return "login";
     }
