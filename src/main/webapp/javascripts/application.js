@@ -62,15 +62,21 @@ $(document).ready(function () {
         $($(this).attr('data-input')).val('');
     });
 
-    $('table.ui.table tr:gt(0)').hover(function() {
-        $(this).parent().find('tr:first .actions').css({ visibility: 'hidden' });
+    window.sessionStorage.setItem('last_tr_index', null);
+
+    $(this).find('tbody tr:eq(0) .actions').css({ visibility: 'visible' });
+
+    $('table.ui.table tbody tr').hover(function() {
+        $(this).parent().find('.actions').css({ visibility: 'hidden' });
+        $(this).find('.actions').css({ visibility: 'visible' });
+
+        window.sessionStorage.setItem('last_tr_index', $(this).index());
     });
 
-    $('table.ui.table tr:eq(1)').hover(function() {
-        $(this).parent().find('tr:first .actions').css({ visibility: 'visible' });
-    });
+    $('table.ui.table').mouseleave(function() {
+        var stored_index = window.sessionStorage.getItem('last_tr_index') || 1;
 
-    $('table.ui.table tr:gt(0)').mouseleave(function() {
-        $(this).parent().find('tr:first .actions').css({ visibility: 'visible' });
+        $(this).find('tr .actions').css({ visibility: 'hidden' });
+        $(this).find('tbody tr:eq(' + stored_index + ') .actions').css({ visibility: 'visible' });
     });
 });

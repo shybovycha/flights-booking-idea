@@ -39,10 +39,6 @@ tr:hover td .actions {
     visibility: visible;
 }
 
-table tbody tr:first-child td .actions {
-    visibility: visible;
-}
-
 tr td .actions {
     visibility: hidden;
 }

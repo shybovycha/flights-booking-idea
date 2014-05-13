@@ -136,6 +136,10 @@ public class LoginBean {
         HttpSession httpSession = request.getSession(false);
         httpSession.setAttribute("user", null);
 
-        return "login";
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("login.xhtml");
+        } finally {
+            return "login.xhtml";
+        }
     }
 }
