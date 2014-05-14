@@ -36,14 +36,14 @@ public class AuthenticationFilter implements Filter {
 
         rolePages = new HashMap<String, String>();
 
-        rolePages.put("ACCOUNTANT", "/booking_office_accountant.xhtml");
-        rolePages.put("BOOKING_ADMINISTRATOR", "/booking_office_administrator.xhtml");
-        rolePages.put("ANALYTIC", "/business_analytic.xhtml");
-        rolePages.put("ADMINISTRATOR", "/create_flight.xhtml");
-        rolePages.put("SUPER", "/create_user.xhtml");
-        rolePages.put("ADMINISTRATOR", "/edit_flight.xhtml");
-        rolePages.put("SUPER", "/edit_user.xhtml");
-        rolePages.put("SUPER", "/root.xhtml");
+        rolePages.put("/booking_office_accountant.xhtml", "ACCOUNTANT");
+        rolePages.put("/booking_office_administrator.xhtml", "BOOKING_ADMINISTRATOR");
+        rolePages.put("/business_analytic.xhtml", "ANALYTIC");
+        rolePages.put("/create_flight.xhtml", "BOOKING_ADMINISTRATOR");
+        rolePages.put("/create_user.xhtml", "SUPER");
+        rolePages.put("/edit_flight.xhtml", "BOOKING_ADMINISTRATOR");
+        rolePages.put("/edit_user.xhtml", "SUPER");
+        rolePages.put("/root.xhtml", "SUPER");
     }
 
     @Override
@@ -67,7 +67,7 @@ public class AuthenticationFilter implements Filter {
 
             User user = (User) session.getAttribute("user");
 
-            if (!rolePages.get(user.getRole()).equals(requestedPage)) {
+            if (!rolePages.get(requestedPage).equals(user.getRole())) {
                 response.sendRedirect(request.getContextPath() + "/login.xhtml");
                 return;
             }
